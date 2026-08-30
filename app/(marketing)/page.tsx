@@ -6,17 +6,26 @@ import { Apps } from "@/components/sections/Apps";
 import { FAQ } from "@/components/sections/FAQ";
 import { CTA } from "@/components/sections/CTA";
 import { Footer } from "@/components/sections/Footer";
+import { getMarqueeApps, getPortfolioApps } from "@/lib/supabase/content";
 
-export default function Home() {
+// Sayfayı saatte bir Supabase'den yeniden oluşturur (ISR)
+export const revalidate = 3600;
+
+export default async function Home() {
+  const [marqueeApps, portfolioApps] = await Promise.all([
+    getMarqueeApps(),
+    getPortfolioApps(),
+  ]);
+
   return (
     <>
       <Navbar />
       <main id="main">
         <Hero />
         <div className="flex flex-col gap-[clamp(96px,14vh,200px)] pb-[clamp(96px,14vh,200px)]">
-          <Marquee />
+          <Marquee apps={marqueeApps} />
           <TrackRecord />
-          <Apps />
+          <Apps items={portfolioApps} />
           <FAQ />
           <CTA />
         </div>

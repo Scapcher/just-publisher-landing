@@ -2,11 +2,14 @@
 
 import { useState } from "react";
 import { useInView } from "@/hooks/useInView";
-import { content } from "@/lib/content";
+import { content, type PortfolioApp } from "@/lib/content";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { AppStoreIcon } from "@/components/icons/AppStore";
 import { PlayStoreIcon } from "@/components/icons/PlayStore";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { AppStoreBadge } from "@/components/icons/AppStoreBadge";
+import { GooglePlayBadge } from "@/components/icons/GooglePlayBadge";
 
 // ─── Phone mockup ──────────────────────────────────────────────────────────────
 
@@ -135,6 +138,39 @@ function PhoneMockup({
   );
 }
 
+// ─── Phone frame (gerçek screenshot'lar için) ──────────────────────────────────
+
+function PhoneFrame({
+  width = 200,
+  height = 400,
+  accent,
+  children,
+}: {
+  width?: number;
+  height?: number;
+  accent: string;
+  children?: React.ReactNode;
+}) {
+  const scale = width / 200;
+  return (
+    <div
+      style={{
+        width,
+        height,
+        borderRadius: 28 * scale,
+        border: "1.5px solid rgba(26,26,18,0.10)",
+        background: accent,
+        boxShadow: "0 2px 4px rgba(26,26,18,0.04), 0 16px 40px rgba(26,26,18,0.12)",
+        overflow: "hidden",
+        flexShrink: 0,
+        position: "relative",
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 // ─── Stars ─────────────────────────────────────────────────────────────────────
 
 function Stars() {
@@ -206,6 +242,9 @@ interface AppItem {
   initial: string;
   appStoreUrl: string;
   playStoreUrl: string;
+  iconUrl?: string | null;
+  screenshot1Url?: string | null;
+  screenshot2Url?: string | null;
 }
 
 // ─── Panel ─────────────────────────────────────────────────────────────────────
@@ -243,11 +282,23 @@ function AppPanel({ app, index }: { app: AppItem; index: number }) {
           fontWeight: 700,
           letterSpacing: "-0.02em",
           flexShrink: 0,
+          overflow: "hidden",
           boxShadow:
             "0 1px 2px rgba(26,26,18,0.06), 0 6px 16px rgba(26,26,18,0.10), inset 0 1px 0 rgba(255,255,255,0.2)",
         }}
       >
-        {app.initial}
+        {app.iconUrl ? (
+          <Image
+            src={app.iconUrl}
+            alt={`${app.name} icon`}
+            width={90}
+            height={90}
+            style={{ objectFit: "cover", width: "100%", height: "100%" }}
+            unoptimized
+          />
+        ) : (
+          app.initial
+        )}
       </div>
 
       <div style={{ height: 40 }} />
@@ -382,105 +433,120 @@ function AppPanel({ app, index }: { app: AppItem; index: number }) {
 
       <div style={{ height: 32 }} />
 
-      {/* CTA */}
-      <a
-        href={app.appStoreUrl}
-        className="inline-flex items-center gap-2 rounded-btn bg-forest text-paper font-semibold self-start"
-        style={{
-          height: 44,
-          paddingLeft: 22,
-          paddingRight: 22,
-          fontSize: 15,
-          letterSpacing: "-0.01em",
-          textDecoration: "none",
-          boxShadow: "0 1px 2px rgba(26,26,18,0.04), 0 4px 12px rgba(48,109,41,0.14)",
-          whiteSpace: "nowrap",
-        }}
-        aria-label={`View ${app.name} on App Store`}
-      >
-        View {app.name}
-        <span
-          aria-hidden="true"
+      {/* CTA — store badges */}
+      <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+        <a
+          href={app.appStoreUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Download ${app.name} on the App Store`}
           style={{
             display: "inline-block",
-            transition: "transform 280ms cubic-bezier(0.22,1,0.36,1)",
-            transform: hovered ? "translateX(4px)" : "translateX(0)",
+            textDecoration: "none",
+            transition: "opacity 200ms, transform 200ms cubic-bezier(0.22,1,0.36,1)",
+            opacity: hovered ? 0.82 : 1,
+            transform: hovered ? "translateY(-1px)" : "translateY(0)",
           }}
         >
-          →
-        </span>
-      </a>
+          <AppStoreBadge height={44} />
+        </a>
+        <a
+          href={app.playStoreUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`Get ${app.name} on Google Play`}
+          style={{
+            display: "inline-block",
+            textDecoration: "none",
+            transition: "opacity 200ms, transform 200ms cubic-bezier(0.22,1,0.36,1)",
+            opacity: hovered ? 0.82 : 1,
+            transform: hovered ? "translateY(-1px)" : "translateY(0)",
+          }}
+        >
+          <GooglePlayBadge height={44} />
+        </a>
+      </div>
     </div>
   );
+
+  const hasScreenshots = app.screenshot1Url || app.screenshot2Url;
 
   // ── Visual column ─────────────────────────────────────────────────────────
   const visualCol = (
     <div
       className="relative hidden min-[900px]:block"
-      style={{ flex: "0 0 44%", minHeight: 480 }}
+      style={{ flex: "0 0 48%", minHeight: 520 }}
     >
-      {/*
-       * Stack: 3 phones, front is leftmost (z:3), back is rightmost (z:1).
-       * For normal cards: stack anchored right, fans rightward past panel edge.
-       * For reversed cards: stack anchored left, fans leftward past panel edge.
-       * Panel overflow:hidden clips the portion past the edge.
-       *
-       * Phone: 200×400px. Offsets: 32px per step.
-       * Stack container: 264px wide (200 + 32 + 32).
-       * Positioned -48px past the outer edge → back phone clips ~48px.
-       */}
-      <div
-        style={{
-          position: "absolute",
-          bottom: -80,
-          ...(reversed ? { left: -60 } : { right: -60 }),
-          width: 330,
-          height: 560,
-          pointerEvents: "none",
-        }}
-      >
-        {/* Back phone */}
+      {hasScreenshots ? (
+        /* ── Gerçek screenshot'lar: yan yana, kart yüksekliğini dolduruyor ── */
         <div
           style={{
             position: "absolute",
-            bottom: 80,
-            ...(reversed ? { right: 80 } : { left: 80 }),
-            zIndex: 1,
-            opacity: 0.42,
-            transition: "transform 280ms cubic-bezier(0.22,1,0.36,1)",
-            transform: `translateX(${reversed ? -backSpread : backSpread}px)`,
+            bottom: -28,
+            left: 0,
+            right: 0,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "flex-end",
+            gap: 12,
+            pointerEvents: "none",
           }}
         >
-          <PhoneMockup accent={app.bg} width={250} height={500} />
-        </div>
+          {/* Screenshot 1 */}
+          <div
+            style={{
+              transition: "transform 300ms cubic-bezier(0.22,1,0.36,1)",
+              transform: `translateY(${hovered ? -10 : 0}px)`,
+              flexShrink: 0,
+            }}
+          >
+            <PhoneFrame width={241} height={580} accent={app.bg}>
+              {app.screenshot1Url && (
+                <Image src={app.screenshot1Url} alt={`${app.name} screenshot 1`}
+                  fill style={{ objectFit: "cover" }} unoptimized />
+              )}
+            </PhoneFrame>
+          </div>
 
-        {/* Mid phone */}
+          {/* Screenshot 2 — 36px yukarıda */}
+          <div
+            style={{
+              transition: "transform 300ms cubic-bezier(0.22,1,0.36,1)",
+              transform: `translateY(${hovered ? -46 : -36}px)`,
+              flexShrink: 0,
+            }}
+          >
+            <PhoneFrame width={241} height={580} accent={app.bg}>
+              {app.screenshot2Url && (
+                <Image src={app.screenshot2Url} alt={`${app.name} screenshot 2`}
+                  fill style={{ objectFit: "cover" }} unoptimized />
+              )}
+            </PhoneFrame>
+          </div>
+        </div>
+      ) : (
+        /* ── Placeholder mockup'lar ── */
         <div
           style={{
             position: "absolute",
-            bottom: 80,
-            ...(reversed ? { right: 40 } : { left: 40 }),
-            zIndex: 2,
-            opacity: 0.68,
-            transition: "transform 280ms cubic-bezier(0.22,1,0.36,1)",
-            transform: `translateX(${reversed ? -midSpread : midSpread}px)`,
+            bottom: -80,
+            ...(reversed ? { left: -60 } : { right: -60 }),
+            width: 330,
+            height: 560,
+            pointerEvents: "none",
           }}
         >
-          <PhoneMockup accent={app.bg} width={250} height={500} />
+          <div style={{ position: "absolute", bottom: 80, ...(reversed ? { right: 80 } : { left: 80 }), zIndex: 1, opacity: 0.42, transition: "transform 280ms cubic-bezier(0.22,1,0.36,1)", transform: `translateX(${reversed ? -backSpread : backSpread}px)` }}>
+            <PhoneMockup accent={app.bg} width={250} height={500} />
+          </div>
+          <div style={{ position: "absolute", bottom: 80, ...(reversed ? { right: 40 } : { left: 40 }), zIndex: 2, opacity: 0.68, transition: "transform 280ms cubic-bezier(0.22,1,0.36,1)", transform: `translateX(${reversed ? -midSpread : midSpread}px)` }}>
+            <PhoneMockup accent={app.bg} width={250} height={500} />
+          </div>
+          <div style={{ position: "absolute", bottom: 80, ...(reversed ? { right: 0 } : { left: 0 }), zIndex: 3 }}>
+            <PhoneMockup accent={app.bg} width={250} height={500} />
+          </div>
         </div>
-
-        {/* Front phone */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: 80,
-            ...(reversed ? { right: 0 } : { left: 0 }),
-            zIndex: 3,
-          }}
-        >
-          <PhoneMockup accent={app.bg} width={250} height={500} />
-        </div>
-      </div>
+      )}
     </div>
   );
 
@@ -488,17 +554,40 @@ function AppPanel({ app, index }: { app: AppItem; index: number }) {
   const mobilePhones = (
     <div
       className="flex min-[900px]:hidden justify-center items-end overflow-hidden"
-      style={{ height: 260, marginTop: 8 }}
+      style={{ height: 280, marginTop: 8, gap: 10 }}
     >
-      <div style={{ position: "relative", zIndex: 3, flexShrink: 0 }}>
-        <PhoneMockup accent={app.bg} width={140} height={280} />
-      </div>
-      <div style={{ position: "relative", zIndex: 2, marginLeft: -104, flexShrink: 0, opacity: 0.65 }}>
-        <PhoneMockup accent={app.bg} width={140} height={280} />
-      </div>
-      <div style={{ position: "relative", zIndex: 1, marginLeft: -104, flexShrink: 0, opacity: 0.38 }}>
-        <PhoneMockup accent={app.bg} width={140} height={280} />
-      </div>
+      {hasScreenshots ? (
+        <>
+          <div style={{ flexShrink: 0 }}>
+            <PhoneFrame width={150} height={280} accent={app.bg}>
+              {app.screenshot1Url && (
+                <Image src={app.screenshot1Url} alt={`${app.name} screenshot 1`}
+                  fill style={{ objectFit: "cover" }} unoptimized />
+              )}
+            </PhoneFrame>
+          </div>
+          <div style={{ flexShrink: 0, transform: "translateY(-20px)" }}>
+            <PhoneFrame width={150} height={280} accent={app.bg}>
+              {app.screenshot2Url && (
+                <Image src={app.screenshot2Url} alt={`${app.name} screenshot 2`}
+                  fill style={{ objectFit: "cover" }} unoptimized />
+              )}
+            </PhoneFrame>
+          </div>
+        </>
+      ) : (
+        <>
+          <div style={{ position: "relative", zIndex: 3, flexShrink: 0 }}>
+            <PhoneMockup accent={app.bg} width={140} height={280} />
+          </div>
+          <div style={{ position: "relative", zIndex: 2, marginLeft: -104, flexShrink: 0, opacity: 0.65 }}>
+            <PhoneMockup accent={app.bg} width={140} height={280} />
+          </div>
+          <div style={{ position: "relative", zIndex: 1, marginLeft: -104, flexShrink: 0, opacity: 0.38 }}>
+            <PhoneMockup accent={app.bg} width={140} height={280} />
+          </div>
+        </>
+      )}
     </div>
   );
 
@@ -548,7 +637,7 @@ function AppPanel({ app, index }: { app: AppItem; index: number }) {
 
 // ─── Section ───────────────────────────────────────────────────────────────────
 
-export function Apps() {
+export function Apps({ items }: { items: PortfolioApp[] }) {
   const { apps } = content;
 
   return (
@@ -568,7 +657,7 @@ export function Apps() {
           {apps.title}
         </h2>
         <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-          {apps.items.map((app, i) => (
+          {items.map((app, i) => (
             <AppPanel key={app.slug} app={app as AppItem} index={i} />
           ))}
         </div>

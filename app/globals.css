@@ -19,6 +19,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-feature-settings: "ss01", "cv11", "tnum";
+    overflow-x: hidden;
   }
 
   *:focus-visible {
