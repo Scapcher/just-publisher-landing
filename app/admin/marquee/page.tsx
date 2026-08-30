@@ -21,7 +21,7 @@ export default async function MarqueePage() {
 
       {/* Mevcut ikonlar */}
       <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 40 }}>
-        {apps?.map((app) => (
+        {apps?.map((app: any) => (
           <MarqueeRow key={app.id} app={app} />
         ))}
       </div>

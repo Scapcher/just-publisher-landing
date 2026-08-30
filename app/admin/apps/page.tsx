@@ -27,7 +27,7 @@ export default async function AppsPage() {
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        {apps?.map((app) => (
+        {apps?.map((app: any) => (
           <div
             key={app.slug}
             style={{

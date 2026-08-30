@@ -13,8 +13,6 @@ export default async function EditAppPage({ params }: { params: Promise<{ slug: 
     .eq("slug", slug)
     .single();
 
-  if (!app) notFound();
-
   return (
     <div>
       <h1 style={{ fontSize: 26, fontWeight: 700, letterSpacing: "-0.025em", marginBottom: 8 }}>
