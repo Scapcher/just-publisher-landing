@@ -2,51 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  /* Your Specific Palette */
-  --background: #FAF3E1;
-  --secondary: #F5E7C6;
-  --primary: #FF6D1F;
-  --foreground: #1A1A1A; /* Deep dark for readability */
-}
-
-/* 2025 Q4 Trend: Minimalist dark mode often uses deep tints of the primary color */
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #12100E;
-    --secondary: #2A2620;
-    --primary: #FF6D1F;
-    --foreground: #FAF3E1;
+    --glass-bg: rgba(255, 253, 244, 0.68);
+    --glass-blur: blur(20px) saturate(140%);
+    --border-glass: rgba(26, 26, 18, 0.06);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: #FBF5DD;
+    color: #1A1A12;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "ss01", "cv11", "tnum";
+  }
+
+  *:focus-visible {
+    outline: 2px solid #306D29;
+    outline-offset: 2px;
+    border-radius: 4px;
   }
 }
 
-html {
-  scroll-behavior: smooth;
+@layer utilities {
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    -webkit-backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--border-glass);
+  }
+
+  .inset-light {
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  }
+
+  .border-glass {
+    border: 1px solid var(--border-glass);
+  }
+
+  .text-optical {
+    margin-left: -0.04em;
+  }
 }
 
-body {
-  color: var(--foreground);
-  background-color: var(--background);
-  /* Ensures 2025 typography standards */
-  font-feature-settings: "kern" 1, "ss01" 1, "cv10" 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Custom Scrollbar to match palette */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--background);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--secondary);
-  border-radius: 8px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--primary);
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
