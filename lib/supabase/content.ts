@@ -1,21 +1,23 @@
 import { createClient } from "@supabase/supabase-js";
 import type { MarqueeApp, PortfolioApp } from "@/lib/content";
 
-// Lazy — not created at module load so build-time missing env vars don't crash.
 let _client: ReturnType<typeof createClient> | null = null;
 
 function getClient() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  if (!url || !key) return null;
   if (!_client) {
-    _client = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!
-    );
+    _client = createClient(url, key);
   }
   return _client;
 }
 
 export async function getMarqueeApps(): Promise<MarqueeApp[]> {
-  const { data, error } = await getClient()
+  const client = getClient();
+  if (!client) return [];
+
+  const { data, error } = await client
     .from("marquee_apps")
     .select("name, bg, initial, icon_url")
     .order("sort_order");
@@ -28,7 +30,10 @@ export async function getMarqueeApps(): Promise<MarqueeApp[]> {
 }
 
 export async function getPortfolioApps(): Promise<PortfolioApp[]> {
-  const { data, error } = await getClient()
+  const client = getClient();
+  if (!client) return [];
+
+  const { data, error } = await client
     .from("portfolio_apps")
     .select(
       "slug, name, subtitle, description, app_store_rating, play_store_rating, rating_count, age_rating, bg, initial, app_store_url, play_store_url, icon_url, screenshot_1_url, screenshot_2_url"
