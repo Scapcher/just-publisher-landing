@@ -75,8 +75,8 @@ export const content = {
     brand: "JustPublisher",
     links: [
       { label: "Apps",    href: "#apps" },
-      { label: "About",   href: "#about" },
-      { label: "Contact", href: "mailto:hello@justpublisher.com" },
+      { label: "About",   href: "/about" },
+      { label: "Contact", href: "/contact" },
     ],
     cta: { label: "Book a Call", href: "mailto:hello@justpublisher.com" },
   },
@@ -160,8 +160,8 @@ export const content = {
     brand: "JustPublisher",
     nav: [
       { label: "Apps",    href: "#apps" },
-      { label: "About",   href: "#about" },
-      { label: "Contact", href: "mailto:hello@justpublisher.com" },
+      { label: "About",   href: "/about" },
+      { label: "Contact", href: "/contact" },
     ],
     legal: [
       { label: "EULA",    href: "/eula" },
