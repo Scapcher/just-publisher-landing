@@ -1,6 +1,7 @@
 "use client";
 
 import { useInView } from "@/hooks/useInView";
+import { useLocale } from "@/lib/i18n/context";
 
 // ─── Shared primitives ────────────────────────────────────────────────────────
 
@@ -210,24 +211,8 @@ function ValueCard({
 // ─── Main export ──────────────────────────────────────────────────────────────
 
 export function AboutContent() {
-  const process = [
-    { num: "01", title: "Discovery",  body: "Send us your app. We'll respond within 48 hours with honest feedback — whether we're the right fit or not." },
-    { num: "02", title: "Audit",      body: "We dig into the product, analytics, market, and retention. Takes 1 to 2 weeks. No fluff, just clarity." },
-    { num: "03", title: "Agreement",  body: "Transparent deal on the table before anything is signed. Your code, your users, your data — always." },
-    { num: "04", title: "Growth",     body: "We run ASO, paid UA, A/B tests, and release strategy. You keep shipping features. We handle distribution." },
-  ];
-
-  const values = [
-    { icon: "◆", title: "We buy potential, not traction",  body: "Most apps we've taken on had fewer than 5,000 downloads. We look for something a bit too good for the attention it's getting." },
-    { icon: "◎", title: "Radical transparency",            body: "Revenue share is on the table before anything is signed. We walk you through every number. No surprises." },
-    { icon: "▲", title: "You own everything",              body: "Your codebase, your users, your data. We acquire distribution rights only. If the relationship ends, you walk away whole." },
-  ];
-
-  const stats = [
-    { value: "+$1M", label: "Revenue Generated" },
-    { value: "10+",  label: "Apps Published" },
-    { value: "20+",  label: "Studios Supported" },
-  ];
+  const { t } = useLocale();
+  const { about } = t;
 
   return (
     <>
@@ -288,7 +273,7 @@ export function AboutContent() {
                 style={{ width: 6, height: 6, borderRadius: "50%", background: "#8E05C2", display: "block", flexShrink: 0 }}
               />
               <span style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.2em", color: "#700B97" }}>
-                (05) About
+                {about.eyebrow}
               </span>
             </div>
           </Reveal>
@@ -300,7 +285,9 @@ export function AboutContent() {
               className="text-ink"
               style={{ fontSize: "clamp(52px, 8vw, 116px)", fontWeight: 900, letterSpacing: "-0.05em", lineHeight: 0.88, maxWidth: 820 }}
             >
-              We back apps<br />worth believing in.
+              {about.heading.split("\n").map((line, i) => (
+                <span key={i}>{line}{i < about.heading.split("\n").length - 1 && <br />}</span>
+              ))}
             </h1>
           </Reveal>
 
@@ -316,7 +303,7 @@ export function AboutContent() {
                 maxWidth: 540,
               }}
             >
-              JustPublisher is a mobile app publishing studio. We acquire, grow, and monetize apps built by independent developers — so they can keep building.
+              {about.subtitle}
             </p>
           </Reveal>
         </div>
@@ -334,19 +321,21 @@ export function AboutContent() {
           {/* Left: mission text */}
           <Reveal>
             <div>
-              <SectionLabel>Our model</SectionLabel>
+              <SectionLabel>{about.model.label}</SectionLabel>
               <h2
                 className="text-ink"
                 style={{ fontSize: "clamp(32px,3.5vw,54px)", fontWeight: 900, letterSpacing: "-0.045em", lineHeight: 0.93, marginBottom: 28 }}
               >
-                We win when<br />you win.
+                {about.model.heading.split("\n").map((line, i) => (
+                  <span key={i}>{line}{i < about.model.heading.split("\n").length - 1 && <br />}</span>
+                ))}
               </h2>
               <div className="flex flex-col gap-5">
                 <p style={{ fontSize: 17, lineHeight: 1.68, letterSpacing: "-0.005em", color: "#9080A8" }}>
-                  We acquire the commercial rights to distribute and grow your app. You retain full ownership of your code, your data, and your users. Revenue is split transparently before anything is signed.
+                  {about.model.para1}
                 </p>
                 <p style={{ fontSize: 17, lineHeight: 1.68, letterSpacing: "-0.005em", color: "#9080A8" }}>
-                  We handle the full distribution layer: App Store optimization, paid user acquisition, review management, A/B testing, and release strategy. You keep shipping.
+                  {about.model.para2}
                 </p>
               </div>
             </div>
@@ -354,8 +343,8 @@ export function AboutContent() {
 
           {/* Right: value cards */}
           <div className="flex flex-col gap-4">
-            {values.map((v, i) => (
-              <ValueCard key={v.title} icon={v.icon} title={v.title} body={v.body} delay={i * 70} />
+            {about.values.map((v, i) => (
+              <ValueCard key={i} icon={v.icon} title={v.title} body={v.body} delay={i * 70} />
             ))}
           </div>
         </div>
@@ -383,17 +372,19 @@ export function AboutContent() {
 
         <div className="max-w-container mx-auto relative z-10">
           <Reveal>
-            <SectionLabel>How it works</SectionLabel>
+            <SectionLabel>{about.process.label}</SectionLabel>
             <h2
               className="text-ink"
               style={{ fontSize: "clamp(36px,4.5vw,68px)", fontWeight: 900, letterSpacing: "-0.045em", lineHeight: 0.9, marginBottom: "clamp(40px,6vh,64px)" }}
             >
-              Four steps,<br />zero surprises.
+              {about.process.heading.split("\n").map((line, i) => (
+                <span key={i}>{line}{i < about.process.heading.split("\n").length - 1 && <br />}</span>
+              ))}
             </h2>
           </Reveal>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {process.map((step, i) => (
+            {about.process.steps.map((step, i) => (
               <ProcessStep key={step.num} num={step.num} title={step.title} body={step.body} delay={i * 90} />
             ))}
           </div>
@@ -448,8 +439,8 @@ export function AboutContent() {
               />
 
               <div className="relative grid grid-cols-1 md:grid-cols-3">
-                {stats.map((stat, i) => (
-                  <div key={stat.label} className="relative flex flex-col items-center justify-center py-14 px-8 gap-3">
+                {about.stats.map((stat, i) => (
+                  <div key={i} className="relative flex flex-col items-center justify-center py-14 px-8 gap-3">
                     {/* Vertical divider */}
                     {i > 0 && (
                       <div
@@ -549,16 +540,16 @@ export function AboutContent() {
               >
                 <div className="flex flex-col gap-3">
                   <span style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.2em", color: "#700B97" }}>
-                    Ready to grow
+                    {about.ctaStrip.eyebrow}
                   </span>
                   <h2
                     className="text-ink"
                     style={{ fontSize: "clamp(26px,3.2vw,44px)", fontWeight: 900, letterSpacing: "-0.045em", lineHeight: 0.95 }}
                   >
-                    Ready to grow your app?
+                    {about.ctaStrip.heading}
                   </h2>
                   <p style={{ fontSize: 15, lineHeight: 1.6, color: "#9080A8" }}>
-                    We respond to every serious inquiry within 48 hours.
+                    {about.ctaStrip.body}
                   </p>
                 </div>
 
@@ -578,7 +569,7 @@ export function AboutContent() {
                     boxShadow: "0 0 0 1px rgba(142,5,194,0.45), 0 0 28px rgba(142,5,194,0.32), 0 4px 16px rgba(0,0,0,0.4)",
                   }}
                 >
-                  Book a Call
+                  {about.ctaStrip.cta}
                   <span aria-hidden="true" className="transition-transform duration-160 ease-spring group-hover:translate-x-1">
                     →
                   </span>

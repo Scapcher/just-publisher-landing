@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useInView } from "@/hooks/useInView";
+import { useLocale } from "@/lib/i18n/context";
 import { submitContactForm } from "./_actions";
 
 // ─── Reveal ──────────────────────────────────────────────────────────────────
@@ -172,13 +173,15 @@ const INPUT_STYLE = {
 } as const;
 
 function ContactForm() {
+  const { t } = useLocale();
+  const form = t.contact.form;
+
   const [name, setName]       = useState("");
   const [email, setEmail]     = useState("");
   const [appName, setAppName] = useState("");
   const [message, setMessage] = useState("");
   const [state, setState]     = useState<FormState>("idle");
   const [errMsg, setErrMsg]   = useState("");
-
   const [focused, setFocused] = useState<string | null>(null);
 
   const focusStyle = (id: string) =>
@@ -195,7 +198,7 @@ function ContactForm() {
       setState("success");
     } else {
       setState("error");
-      setErrMsg(result.error ?? "Something went wrong. Please email us directly.");
+      setErrMsg(result.error ?? form.errorFallback);
     }
   };
 
@@ -205,7 +208,6 @@ function ContactForm() {
         className="flex flex-col items-center justify-center gap-5 text-center"
         style={{ minHeight: 300, padding: "40px 24px" }}
       >
-        {/* Check icon */}
         <div
           style={{
             width: 60,
@@ -227,11 +229,12 @@ function ContactForm() {
           className="text-ink"
           style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.025em" }}
         >
-          Inquiry received!
+          {form.successTitle}
         </h3>
         <p style={{ fontSize: 15, lineHeight: 1.65, color: "#9080A8", maxWidth: 340 }}>
-          We'll respond to{" "}
-          <strong style={{ color: "#F0E8FF" }}>{email}</strong> within 48 hours.
+          {form.successBodyPrefix}
+          <strong style={{ color: "#F0E8FF" }}>{email}</strong>
+          {form.successBodySuffix}
         </p>
         <button
           onClick={() => {
@@ -240,7 +243,7 @@ function ContactForm() {
           }}
           style={{ fontSize: 13, color: "#9080A8", textDecoration: "underline", textUnderlineOffset: 3, marginTop: 8 }}
         >
-          Submit another inquiry
+          {form.submitAnother}
         </button>
       </div>
     );
@@ -260,18 +263,18 @@ function ContactForm() {
     <form onSubmit={handleSubmit} noValidate style={{ display: "flex", flexDirection: "column", gap: 20 }}>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }} className="max-sm:grid-cols-1">
         <div>
-          <label htmlFor="c-name" style={labelStyle}>Your name</label>
+          <label htmlFor="c-name" style={labelStyle}>{form.nameLabel}</label>
           <input
-            id="c-name" type="text" placeholder="Alex Johnson" required
+            id="c-name" type="text" placeholder={form.namePlaceholder} required
             value={name} onChange={(e) => setName(e.target.value)}
             onFocus={() => setFocused("name")} onBlur={() => setFocused(null)}
             style={focusStyle("name")}
           />
         </div>
         <div>
-          <label htmlFor="c-email" style={labelStyle}>Email address</label>
+          <label htmlFor="c-email" style={labelStyle}>{form.emailLabel}</label>
           <input
-            id="c-email" type="email" placeholder="alex@example.com" required
+            id="c-email" type="email" placeholder={form.emailPlaceholder} required
             value={email} onChange={(e) => setEmail(e.target.value)}
             onFocus={() => setFocused("email")} onBlur={() => setFocused(null)}
             style={focusStyle("email")}
@@ -280,9 +283,9 @@ function ContactForm() {
       </div>
 
       <div>
-        <label htmlFor="c-app" style={labelStyle}>App name</label>
+        <label htmlFor="c-app" style={labelStyle}>{form.appLabel}</label>
         <input
-          id="c-app" type="text" placeholder="My App"
+          id="c-app" type="text" placeholder={form.appPlaceholder}
           value={appName} onChange={(e) => setAppName(e.target.value)}
           onFocus={() => setFocused("app")} onBlur={() => setFocused(null)}
           style={focusStyle("app")}
@@ -290,10 +293,10 @@ function ContactForm() {
       </div>
 
       <div>
-        <label htmlFor="c-msg" style={labelStyle}>Tell us about your app</label>
+        <label htmlFor="c-msg" style={labelStyle}>{form.messageLabel}</label>
         <textarea
           id="c-msg" rows={5}
-          placeholder="What does your app do? What stage is it at? What are you looking for?"
+          placeholder={form.messagePlaceholder}
           required value={message} onChange={(e) => setMessage(e.target.value)}
           onFocus={() => setFocused("msg")} onBlur={() => setFocused(null)}
           style={{ ...focusStyle("msg"), resize: "none" }}
@@ -322,7 +325,7 @@ function ContactForm() {
           marginTop: 4,
         }}
       >
-        {state === "submitting" ? "Sending…" : "Send Inquiry"}
+        {state === "submitting" ? form.submitting : form.submit}
         {state !== "submitting" && (
           <span
             aria-hidden="true"
@@ -334,7 +337,7 @@ function ContactForm() {
       </button>
 
       <p style={{ fontSize: 12, color: "#9080A8", textAlign: "center" }}>
-        Or email us at{" "}
+        {form.orEmail}{" "}
         <a
           href="mailto:hello@justpublisher.com"
           style={{ color: "#700B97", textDecoration: "underline", textUnderlineOffset: 3 }}
@@ -349,6 +352,9 @@ function ContactForm() {
 // ─── Main export ──────────────────────────────────────────────────────────────
 
 export function ContactContent() {
+  const { t } = useLocale();
+  const { contact } = t;
+
   return (
     <>
       {/* ── Hero ──────────────────────────────────────────────────────── */}
@@ -428,7 +434,7 @@ export function ContactContent() {
                   color: "#700B97",
                 }}
               >
-                (06) Contact
+                {contact.eyebrow}
               </span>
             </div>
           </Reveal>
@@ -446,7 +452,7 @@ export function ContactContent() {
                 maxWidth: 740,
               }}
             >
-              Let&apos;s talk.
+              {contact.heading}
             </h1>
           </Reveal>
 
@@ -462,8 +468,7 @@ export function ContactContent() {
                 maxWidth: 480,
               }}
             >
-              We respond to every serious inquiry within 48 hours. Real
-              conversations, not templates.
+              {contact.subtitle}
             </p>
           </Reveal>
         </div>
@@ -484,7 +489,7 @@ export function ContactContent() {
             <Reveal className="flex flex-col gap-10">
               {/* Email */}
               <div>
-                <SectionLabel>Email us directly</SectionLabel>
+                <SectionLabel>{contact.emailLabel}</SectionLabel>
                 <a
                   href="mailto:hello@justpublisher.com"
                   className="group inline-flex items-center gap-1.5 hover:opacity-80 transition-opacity duration-160"
@@ -509,35 +514,35 @@ export function ContactContent() {
 
               {/* Trust badges */}
               <div>
-                <SectionLabel>Why reach out</SectionLabel>
+                <SectionLabel>{contact.whyLabel}</SectionLabel>
                 <div className="flex flex-col gap-4">
-                  <TrustBadge icon="⏱" text="Response within 48 hours, every time" />
-                  <TrustBadge icon="◎" text="Real conversations — we review every inquiry personally" />
-                  <TrustBadge icon="▲" text="No commitment required to get a response" />
-                  <TrustBadge icon="◆" text="Your code and users stay yours, always" />
+                  {contact.trustBadges.map((badge, i) => (
+                    <TrustBadge key={i} icon={badge.icon} text={badge.text} />
+                  ))}
                 </div>
               </div>
 
               {/* What to include */}
               <div>
-                <SectionLabel>What to include</SectionLabel>
+                <SectionLabel>{contact.whatToIncludeLabel}</SectionLabel>
                 <ul className="flex flex-col gap-3" role="list">
-                  <CheckItem text="Your app name and what it does (one sentence)" />
-                  <CheckItem text="Platform(s) — iOS, Android, or both" />
-                  <CheckItem text="Current download or revenue numbers (ballpark is fine)" />
-                  <CheckItem text="What you're looking for from a publisher" />
-                  <CheckItem text="Timeline or any constraints" />
+                  {contact.checkItems.map((item, i) => (
+                    <CheckItem key={i} text={item} />
+                  ))}
                 </ul>
               </div>
 
               {/* Next steps */}
               <div>
-                <SectionLabel>What happens next</SectionLabel>
+                <SectionLabel>{contact.nextStepsLabel}</SectionLabel>
                 <div className="flex flex-col gap-3">
-                  <NextStep num="01" text="We review your inquiry and respond within 48 hours." />
-                  <NextStep num="02" text="If there's potential fit, we schedule a 30 min intro call." />
-                  <NextStep num="03" text="We run a product and market audit — free, no strings." />
-                  <NextStep num="04" text="If we both like what we see, we put a deal on the table." />
+                  {contact.nextSteps.map((step, i) => (
+                    <NextStep
+                      key={i}
+                      num={String(i + 1).padStart(2, "0")}
+                      text={step}
+                    />
+                  ))}
                 </div>
               </div>
             </Reveal>
@@ -593,11 +598,10 @@ export function ContactContent() {
                       marginBottom: 10,
                     }}
                   >
-                    Tell us about your app.
+                    {contact.form.heading}
                   </h2>
                   <p style={{ fontSize: 14, lineHeight: 1.6, color: "#9080A8" }}>
-                    We review every submission personally. Downloads don&apos;t
-                    matter — potential does.
+                    {contact.form.subheading}
                   </p>
                 </div>
 
@@ -665,14 +669,9 @@ export function ContactContent() {
 
               {/* Stats */}
               <div className="relative grid grid-cols-2 md:grid-cols-4">
-                {[
-                  { value: "+$1M", label: "Revenue Generated" },
-                  { value: "10+",  label: "Apps Published" },
-                  { value: "48h",  label: "Max Response Time" },
-                  { value: "100%", label: "Inquiry Response Rate" },
-                ].map((item, i) => (
+                {contact.statsPanel.map((item, i) => (
                   <div
-                    key={item.label}
+                    key={i}
                     className="relative flex flex-col items-center justify-center py-10 px-6 gap-3"
                   >
                     {/* Dividers */}
@@ -686,7 +685,7 @@ export function ContactContent() {
                         }}
                       />
                     )}
-                    {(i === 2) && (
+                    {i === 2 && (
                       <div
                         className="absolute top-0 left-6 right-6 h-px pointer-events-none md:hidden"
                         aria-hidden="true"

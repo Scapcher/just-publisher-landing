@@ -1,10 +1,11 @@
 "use client";
 
 import { useInView } from "@/hooks/useInView";
-import { content } from "@/lib/content";
+import { useLocale } from "@/lib/i18n/context";
 
 export function CTA() {
-  const { cta } = content;
+  const { t } = useLocale();
+  const { cta } = t;
   const { ref, inView } = useInView();
 
   return (
@@ -111,7 +112,7 @@ export function CTA() {
                   color: "#700B97",
                 }}
               >
-                Ready to grow
+                {cta.eyebrow}
               </span>
 
               {/* Headline */}
@@ -177,7 +178,7 @@ export function CTA() {
                     transition: "color 160ms",
                   }}
                 >
-                  Or email directly →
+                  {cta.emailDirect}
                 </a>
               </div>
             </div>

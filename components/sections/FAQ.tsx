@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { content } from "@/lib/content";
+import { useLocale } from "@/lib/i18n/context";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { useInView } from "@/hooks/useInView";
 import { cn } from "@/lib/utils";
@@ -88,7 +88,8 @@ function AccordionItem({
 }
 
 export function FAQ() {
-  const { faq } = content;
+  const { t } = useLocale();
+  const { faq } = t;
   const [openIndex, setOpenIndex] = useState<number>(0);
   const { ref: headRef, inView: headInView } = useInView({ threshold: 0.15 });
 
@@ -134,12 +135,12 @@ export function FAQ() {
                 {faq.title}
               </h2>
               <p className="text-muted mt-4" style={{ fontSize: 17, lineHeight: 1.55 }}>
-                Still unsure?{" "}
+                {faq.stillUnsure}{" "}
                 <a
                   href="mailto:hello@justpublisher.com"
                   className="text-ink underline underline-offset-4 hover:text-forest transition-colors duration-160 group"
                 >
-                  Book a call
+                  {faq.bookCall}
                   <span
                     aria-hidden="true"
                     className="inline-block ml-1 transition-transform duration-160 ease-spring group-hover:translate-x-1"

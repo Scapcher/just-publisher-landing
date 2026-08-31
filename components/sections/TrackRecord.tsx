@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useInView } from "@/hooks/useInView";
-import { content } from "@/lib/content";
+import { useLocale } from "@/lib/i18n/context";
 
 function Counter({
   target,
@@ -122,7 +122,8 @@ function Counter({
 }
 
 export function TrackRecord() {
-  const { trackRecord } = content;
+  const { t } = useLocale();
+  const { trackRecord } = t;
   const { ref: panelRef, inView: panelInView } = useInView({ threshold: 0.15 });
   const { ref: headRef, inView: headInView } = useInView({ threshold: 0.2 });
 

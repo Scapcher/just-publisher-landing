@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import type { MarqueeApp } from "@/lib/content";
+import { useLocale } from "@/lib/i18n/context";
 
 const ICON = 64;
 const GAP  = 16;
@@ -73,6 +74,7 @@ function MarqueeTrack({
 }
 
 export function Marquee({ apps }: { apps: MarqueeApp[] }) {
+  const { t } = useLocale();
   if (!apps.length) return null;
 
   return (
@@ -92,7 +94,7 @@ export function Marquee({ apps }: { apps: MarqueeApp[] }) {
             color: "#F0E8FF",
           }}
         >
-          Apps we believe in.
+          {t.marquee.heading}
         </h2>
       </div>
 
@@ -164,7 +166,7 @@ export function Marquee({ apps }: { apps: MarqueeApp[] }) {
           >
             ↗
           </span>
-          Explore Our Apps
+          {t.marquee.cta}
         </a>
       </div>
     </section>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { content } from "@/lib/content";
+import { useLocale } from "@/lib/i18n/context";
 import { Button } from "@/components/ui/Button";
 
 // ─── Background — purple orbs + grid + noise ───────────────────────────────────
@@ -229,7 +229,8 @@ function MockupCluster() {
 // ─── Hero section ──────────────────────────────────────────────────────────────
 
 export function Hero() {
-  const { hero } = content;
+  const { t } = useLocale();
+  const { hero } = t;
 
   return (
     <section
@@ -297,7 +298,7 @@ export function Hero() {
                 aria-hidden="true"
                 style={{ width: 6, height: 6, borderRadius: "50%", background: "#700B97", display: "inline-block", marginRight: 7, marginBottom: 1, verticalAlign: "middle" }}
               />
-              Response within 48 hours · No commitments
+              {hero.trust}
             </p>
           </div>
 

@@ -1,7 +1,11 @@
-import { content } from "@/lib/content";
+"use client";
+
+import { useLocale } from "@/lib/i18n/context";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 
 export function Footer() {
-  const { footer } = content;
+  const { t } = useLocale();
+  const { footer } = t;
 
   return (
     <footer className="border-t border-sand px-[clamp(20px,5vw,48px)] pb-10 pt-8">
@@ -14,7 +18,7 @@ export function Footer() {
           <nav aria-label="Footer navigation">
             <ul className="flex flex-wrap items-center gap-6 list-none">
               {footer.nav.map((link) => (
-                <li key={link.label}>
+                <li key={link.href}>
                   <a
                     href={link.href}
                     className="text-[15px] text-muted hover:text-forest transition-colors duration-160 hover:underline underline-offset-4"
@@ -25,6 +29,7 @@ export function Footer() {
               ))}
             </ul>
           </nav>
+          <LanguageSwitcher compact />
         </div>
 
         {/* Bottom row */}
@@ -32,7 +37,7 @@ export function Footer() {
           <nav aria-label="Legal links">
             <ul className="flex flex-wrap items-center gap-x-4 gap-y-2 list-none">
               {footer.legal.map((link, i) => (
-                <li key={link.label} className="flex items-center gap-4">
+                <li key={link.href} className="flex items-center gap-4">
                   {i > 0 && (
                     <span className="text-sand" aria-hidden="true">
                       •

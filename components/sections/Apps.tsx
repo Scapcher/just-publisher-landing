@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useInView } from "@/hooks/useInView";
-import { content, type PortfolioApp } from "@/lib/content";
+import { type PortfolioApp } from "@/lib/content";
+import { useLocale } from "@/lib/i18n/context";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { AppStoreIcon } from "@/components/icons/AppStore";
 import { PlayStoreIcon } from "@/components/icons/PlayStore";
@@ -640,7 +641,8 @@ function AppPanel({ app, index }: { app: AppItem; index: number }) {
 // ─── Section ───────────────────────────────────────────────────────────────────
 
 export function Apps({ items }: { items: PortfolioApp[] }) {
-  const { apps } = content;
+  const { t } = useLocale();
+  const { apps } = t;
 
   return (
     <section id="apps" className="px-[clamp(20px,5vw,48px)]" aria-labelledby="apps-heading">

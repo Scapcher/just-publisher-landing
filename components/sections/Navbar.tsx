@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { content } from "@/lib/content";
+import { useLocale } from "@/lib/i18n/context";
+import { LanguageSwitcher } from "@/components/ui/LanguageSwitcher";
 import { cn } from "@/lib/utils";
 
 function JPIcon() {
@@ -63,7 +64,8 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
-  const { nav } = content;
+  const { t } = useLocale();
+  const { nav } = t;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -114,10 +116,10 @@ export function Navbar() {
               </span>
             </a>
 
-            {/* Desktop links */}
+            {/* Desktop links + language switcher */}
             <ul className="hidden md:flex items-center gap-8 list-none">
               {nav.links.map((link) => (
-                <li key={link.label}>
+                <li key={link.href}>
                   <a
                     href={link.href}
                     className="relative text-[15px] font-medium text-muted hover:text-ink transition-colors duration-160 group"
@@ -127,6 +129,9 @@ export function Navbar() {
                   </a>
                 </li>
               ))}
+              <li>
+                <LanguageSwitcher />
+              </li>
             </ul>
 
             {/* Desktop CTA */}
@@ -169,7 +174,7 @@ export function Navbar() {
         >
           <ul className="flex flex-col gap-6 list-none w-full">
             {nav.links.map((link, i) => (
-              <li key={link.label} className="animate-hero-0" style={{ animationDelay: `${i * 40}ms` }}>
+              <li key={link.href} className="animate-hero-0" style={{ animationDelay: `${i * 40}ms` }}>
                 <a
                   href={link.href}
                   className="text-[32px] font-bold tracking-[-0.03em] text-ink hover:text-forest transition-colors duration-160"
@@ -179,7 +184,10 @@ export function Navbar() {
                 </a>
               </li>
             ))}
-            <li className="animate-hero-0 mt-4" style={{ animationDelay: `${nav.links.length * 40}ms` }}>
+            <li className="animate-hero-0 mt-2" style={{ animationDelay: `${nav.links.length * 40}ms` }}>
+              <LanguageSwitcher />
+            </li>
+            <li className="animate-hero-0 mt-2" style={{ animationDelay: `${(nav.links.length + 1) * 40}ms` }}>
               <a
                 href={nav.cta.href}
                 className="inline-flex items-center gap-2 h-14 px-7 rounded-btn text-ink text-lg font-semibold"
