@@ -4,9 +4,17 @@ import { useState } from "react";
 import { useInView } from "@/hooks/useInView";
 import { submitContactForm } from "./_actions";
 
-// ─── Reveal ─────────────────────────────────────────────────────────────────────
+// ─── Reveal ──────────────────────────────────────────────────────────────────
 
-function Reveal({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
+function Reveal({
+  children,
+  delay = 0,
+  className = "",
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}) {
   const { ref, inView } = useInView({ threshold: 0.1 });
   return (
     <div
@@ -23,19 +31,58 @@ function Reveal({ children, delay = 0, className = "" }: { children: React.React
   );
 }
 
-// ─── Trust badge ────────────────────────────────────────────────────────────────
+// ─── Sub-components ───────────────────────────────────────────────────────────
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex items-center gap-3 mb-5">
+      <span
+        style={{
+          fontSize: 10,
+          fontWeight: 700,
+          textTransform: "uppercase",
+          letterSpacing: "0.2em",
+          color: "#9080A8",
+          whiteSpace: "nowrap",
+        }}
+      >
+        {children}
+      </span>
+      <div
+        className="flex-1 h-px"
+        style={{
+          background:
+            "linear-gradient(to right, rgba(142,5,194,0.35), transparent)",
+        }}
+      />
+    </div>
+  );
+}
 
 function TrustBadge({ icon, text }: { icon: string; text: string }) {
   return (
-    <div className="flex items-center gap-2.5">
+    <div className="flex items-start gap-3.5">
       <div
-        className="flex items-center justify-center rounded-item flex-shrink-0"
-        style={{ width: 36, height: 36, fontSize: 16, background: "rgba(112,11,151,0.12)", border: "1px solid rgba(112,11,151,0.18)" }}
         aria-hidden="true"
+        style={{
+          width: 34,
+          height: 34,
+          borderRadius: 9,
+          background: "rgba(142,5,194,0.1)",
+          border: "1px solid rgba(142,5,194,0.2)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: 15,
+          flexShrink: 0,
+          marginTop: 1,
+        }}
       >
         {icon}
       </div>
-      <span className="text-muted" style={{ fontSize: 14, lineHeight: 1.5 }}>{text}</span>
+      <span style={{ fontSize: 14, lineHeight: 1.58, color: "#9080A8" }}>
+        {text}
+      </span>
     </div>
   );
 }
@@ -43,8 +90,29 @@ function TrustBadge({ icon, text }: { icon: string; text: string }) {
 function CheckItem({ text }: { text: string }) {
   return (
     <li className="flex items-start gap-3">
-      <span className="flex-shrink-0 mt-0.5 font-bold" style={{ fontSize: 14, color: "#8E05C2" }} aria-hidden="true">✓</span>
-      <span className="text-muted" style={{ fontSize: 14, lineHeight: 1.55 }}>{text}</span>
+      <span
+        aria-hidden="true"
+        style={{
+          flexShrink: 0,
+          marginTop: 3,
+          width: 17,
+          height: 17,
+          borderRadius: 5,
+          background: "rgba(142,5,194,0.12)",
+          border: "1px solid rgba(142,5,194,0.28)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: 9,
+          color: "#8E05C2",
+          fontWeight: 900,
+        }}
+      >
+        ✓
+      </span>
+      <span style={{ fontSize: 14, lineHeight: 1.58, color: "#9080A8" }}>
+        {text}
+      </span>
     </li>
   );
 }
@@ -52,21 +120,56 @@ function CheckItem({ text }: { text: string }) {
 function NextStep({ num, text }: { num: string; text: string }) {
   return (
     <div className="flex items-start gap-4">
-      <span
-        className="flex-shrink-0 flex items-center justify-center rounded-item font-bold"
-        style={{ width: 32, height: 32, fontSize: 13, letterSpacing: "0.02em", background: "rgba(112,11,151,0.12)", border: "1px solid rgba(112,11,151,0.18)", color: "#700B97" }}
+      <div
         aria-hidden="true"
+        style={{
+          flexShrink: 0,
+          width: 30,
+          height: 30,
+          borderRadius: 8,
+          background: "rgba(142,5,194,0.1)",
+          border: "1px solid rgba(142,5,194,0.22)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
       >
-        {num}
+        <span
+          style={{
+            fontSize: 11,
+            fontWeight: 800,
+            letterSpacing: "0.04em",
+            background: "linear-gradient(135deg, #8E05C2, #C47EFF)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            backgroundClip: "text",
+          }}
+        >
+          {num}
+        </span>
+      </div>
+      <span style={{ fontSize: 14, lineHeight: 1.58, color: "#9080A8", paddingTop: 6 }}>
+        {text}
       </span>
-      <span className="text-muted pt-1.5" style={{ fontSize: 14, lineHeight: 1.55 }}>{text}</span>
     </div>
   );
 }
 
-// ─── Contact form ───────────────────────────────────────────────────────────────
+// ─── Contact form ─────────────────────────────────────────────────────────────
 
 type FormState = "idle" | "submitting" | "success" | "error";
+
+const INPUT_STYLE = {
+  background: "#07000F",
+  border: "1px solid rgba(142,5,194,0.2)",
+  color: "#F0E8FF",
+  borderRadius: 8,
+  fontSize: 15,
+  padding: "12px 16px",
+  width: "100%",
+  outline: "none",
+  transition: "border-color 160ms, box-shadow 160ms",
+} as const;
 
 function ContactForm() {
   const [name, setName]       = useState("");
@@ -76,27 +179,18 @@ function ContactForm() {
   const [state, setState]     = useState<FormState>("idle");
   const [errMsg, setErrMsg]   = useState("");
 
-  const fieldBase = [
-    "w-full rounded-item px-4 py-3 text-ink text-[15px] outline-none",
-    "placeholder:text-muted/50 transition-all duration-160",
-    "focus:ring-2",
-  ].join(" ");
+  const [focused, setFocused] = useState<string | null>(null);
 
-  const fieldStyle = {
-    background: "#070010",
-    border: "1px solid rgba(62,6,95,0.7)",
-    color: "#F0E8FF",
-  };
-
-  const fieldFocusStyle = `${fieldBase}`;
+  const focusStyle = (id: string) =>
+    focused === id
+      ? { ...INPUT_STYLE, borderColor: "rgba(142,5,194,0.6)", boxShadow: "0 0 0 3px rgba(142,5,194,0.1)" }
+      : INPUT_STYLE;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setState("submitting");
     setErrMsg("");
-
     const result = await submitContactForm({ name, email, appName, message });
-
     if (result.ok) {
       setState("success");
     } else {
@@ -108,25 +202,43 @@ function ContactForm() {
   if (state === "success") {
     return (
       <div
-        className="flex flex-col items-center justify-center gap-5 p-10 rounded-card text-center"
-        style={{ minHeight: 280, background: "rgba(62,6,95,0.2)", border: "1px solid rgba(112,11,151,0.25)" }}
+        className="flex flex-col items-center justify-center gap-5 text-center"
+        style={{ minHeight: 300, padding: "40px 24px" }}
       >
+        {/* Check icon */}
         <div
-          className="flex items-center justify-center rounded-item"
-          style={{ width: 56, height: 56, fontSize: 24, background: "rgba(112,11,151,0.18)", border: "1px solid rgba(112,11,151,0.3)" }}
+          style={{
+            width: 60,
+            height: 60,
+            borderRadius: 16,
+            background: "rgba(142,5,194,0.12)",
+            border: "1px solid rgba(142,5,194,0.3)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 24,
+            color: "#8E05C2",
+          }}
           aria-hidden="true"
         >
           ✓
         </div>
-        <h3 className="text-ink" style={{ fontSize: 22, fontWeight: 700, letterSpacing: "-0.02em" }}>
+        <h3
+          className="text-ink"
+          style={{ fontSize: 22, fontWeight: 800, letterSpacing: "-0.025em" }}
+        >
           Inquiry received!
         </h3>
-        <p className="text-muted" style={{ fontSize: 15, lineHeight: 1.6, maxWidth: 340 }}>
-          We'll respond to <strong style={{ color: "#F0E8FF" }}>{email}</strong> within 48 hours.
+        <p style={{ fontSize: 15, lineHeight: 1.65, color: "#9080A8", maxWidth: 340 }}>
+          We'll respond to{" "}
+          <strong style={{ color: "#F0E8FF" }}>{email}</strong> within 48 hours.
         </p>
         <button
-          onClick={() => { setState("idle"); setName(""); setEmail(""); setAppName(""); setMessage(""); }}
-          className="mt-2 text-[13px] text-muted underline underline-offset-2"
+          onClick={() => {
+            setState("idle");
+            setName(""); setEmail(""); setAppName(""); setMessage("");
+          }}
+          style={{ fontSize: 13, color: "#9080A8", textDecoration: "underline", textUnderlineOffset: 3, marginTop: 8 }}
         >
           Submit another inquiry
         </button>
@@ -134,67 +246,99 @@ function ContactForm() {
     );
   }
 
+  const labelStyle: React.CSSProperties = {
+    fontSize: 11,
+    fontWeight: 700,
+    textTransform: "uppercase",
+    letterSpacing: "0.14em",
+    color: "#9080A8",
+    display: "block",
+    marginBottom: 8,
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4" noValidate>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="c-name" className="text-[12px] font-semibold uppercase tracking-[0.1em] text-muted">Your name</label>
+    <form onSubmit={handleSubmit} noValidate style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }} className="max-sm:grid-cols-1">
+        <div>
+          <label htmlFor="c-name" style={labelStyle}>Your name</label>
           <input
             id="c-name" type="text" placeholder="Alex Johnson" required
             value={name} onChange={(e) => setName(e.target.value)}
-            className={fieldFocusStyle} style={fieldStyle}
+            onFocus={() => setFocused("name")} onBlur={() => setFocused(null)}
+            style={focusStyle("name")}
           />
         </div>
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="c-email" className="text-[12px] font-semibold uppercase tracking-[0.1em] text-muted">Email address</label>
+        <div>
+          <label htmlFor="c-email" style={labelStyle}>Email address</label>
           <input
             id="c-email" type="email" placeholder="alex@example.com" required
             value={email} onChange={(e) => setEmail(e.target.value)}
-            className={fieldFocusStyle} style={fieldStyle}
+            onFocus={() => setFocused("email")} onBlur={() => setFocused(null)}
+            style={focusStyle("email")}
           />
         </div>
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="c-app" className="text-[12px] font-semibold uppercase tracking-[0.1em] text-muted">App name</label>
+      <div>
+        <label htmlFor="c-app" style={labelStyle}>App name</label>
         <input
           id="c-app" type="text" placeholder="My App"
           value={appName} onChange={(e) => setAppName(e.target.value)}
-          className={fieldFocusStyle} style={fieldStyle}
+          onFocus={() => setFocused("app")} onBlur={() => setFocused(null)}
+          style={focusStyle("app")}
         />
       </div>
 
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="c-msg" className="text-[12px] font-semibold uppercase tracking-[0.1em] text-muted">Tell us about your app</label>
+      <div>
+        <label htmlFor="c-msg" style={labelStyle}>Tell us about your app</label>
         <textarea
           id="c-msg" rows={5}
           placeholder="What does your app do? What stage is it at? What are you looking for?"
           required value={message} onChange={(e) => setMessage(e.target.value)}
-          className={`${fieldFocusStyle} resize-none`} style={fieldStyle}
+          onFocus={() => setFocused("msg")} onBlur={() => setFocused(null)}
+          style={{ ...focusStyle("msg"), resize: "none" }}
         />
       </div>
 
       {state === "error" && (
-        <p className="text-[13px]" style={{ color: "#f87171" }}>
-          {errMsg}
-        </p>
+        <p style={{ fontSize: 13, color: "#f87171" }}>{errMsg}</p>
       )}
 
       <button
         type="submit"
         disabled={state === "submitting"}
-        className="inline-flex items-center justify-center gap-2 h-12 px-7 rounded-btn text-ink text-[15px] font-semibold shadow-elev-1 transition-all duration-160 ease-spring group mt-2 hover:shadow-elev-2 disabled:opacity-60"
-        style={{ background: "#700B97" }}
+        className="group inline-flex items-center justify-center gap-2.5 transition-all duration-200 ease-spring hover:scale-[1.02] hover:brightness-110 active:scale-[0.98] disabled:opacity-60"
+        style={{
+          height: 52,
+          borderRadius: 8,
+          fontSize: 15,
+          fontWeight: 700,
+          letterSpacing: "-0.01em",
+          color: "#F0E8FF",
+          background: "linear-gradient(135deg, #6009A0 0%, #8E05C2 60%, #A020D8 100%)",
+          boxShadow: "0 0 0 1px rgba(142,5,194,0.4), 0 0 28px rgba(142,5,194,0.28), 0 4px 16px rgba(0,0,0,0.4)",
+          border: "none",
+          cursor: state === "submitting" ? "not-allowed" : "pointer",
+          marginTop: 4,
+        }}
       >
         {state === "submitting" ? "Sending…" : "Send Inquiry"}
         {state !== "submitting" && (
-          <span aria-hidden="true" className="transition-transform duration-160 ease-spring group-hover:translate-x-1">→</span>
+          <span
+            aria-hidden="true"
+            className="transition-transform duration-160 ease-spring group-hover:translate-x-1"
+          >
+            →
+          </span>
         )}
       </button>
 
-      <p className="text-muted text-center" style={{ fontSize: 12 }}>
-        Or email us directly at{" "}
-        <a href="mailto:hello@justpublisher.com" className="text-forest underline underline-offset-2">
+      <p style={{ fontSize: 12, color: "#9080A8", textAlign: "center" }}>
+        Or email us at{" "}
+        <a
+          href="mailto:hello@justpublisher.com"
+          style={{ color: "#700B97", textDecoration: "underline", textUnderlineOffset: 3 }}
+        >
           hello@justpublisher.com
         </a>
       </p>
@@ -202,81 +346,181 @@ function ContactForm() {
   );
 }
 
-// ─── Main export ───────────────────────────────────────────────────────────────
+// ─── Main export ──────────────────────────────────────────────────────────────
 
 export function ContactContent() {
   return (
     <>
-      {/* ── Hero ─────────────────────────────────────────────────────── */}
-      <section className="relative pt-36 pb-16 px-[clamp(20px,5vw,48px)] overflow-hidden" aria-labelledby="contact-heading">
+      {/* ── Hero ──────────────────────────────────────────────────────── */}
+      <section
+        className="relative overflow-hidden"
+        style={{ paddingTop: "clamp(120px,14vh,180px)", paddingBottom: "clamp(64px,8vh,100px)" }}
+        aria-labelledby="contact-heading"
+      >
+        {/* Grid overlay */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          aria-hidden="true"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(240,232,255,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(240,232,255,0.025) 1px, transparent 1px)",
+            backgroundSize: "48px 48px",
+          }}
+        />
+
+        {/* Central spotlight */}
         <div
           className="absolute pointer-events-none"
           aria-hidden="true"
           style={{
-            width: 500, height: 500, left: "-5%", top: "-15%",
+            top: -160,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: 1000,
+            height: 500,
             borderRadius: "50%",
-            background: "radial-gradient(circle, rgba(112,11,151,0.16) 0%, transparent 70%)",
-            filter: "blur(80px)",
+            background:
+              "radial-gradient(ellipse, rgba(142,5,194,0.2) 0%, rgba(62,6,95,0.08) 40%, transparent 70%)",
+            filter: "blur(48px)",
           }}
         />
 
-        <div className="max-w-container mx-auto relative z-10">
+        {/* Left ambient */}
+        <div
+          className="absolute pointer-events-none"
+          aria-hidden="true"
+          style={{
+            top: 0,
+            left: -100,
+            width: 400,
+            height: 400,
+            borderRadius: "50%",
+            background:
+              "radial-gradient(circle, rgba(112,11,151,0.14) 0%, transparent 70%)",
+            filter: "blur(60px)",
+          }}
+        />
+
+        <div
+          className="relative z-10 max-w-container mx-auto"
+          style={{ paddingInline: "clamp(20px,5vw,48px)" }}
+        >
+          {/* Eyebrow */}
           <Reveal>
-            <span
-              className="inline-flex items-center gap-1.5 rounded-btn px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-forest mb-8 block w-fit"
-              style={{ background: "rgba(112,11,151,0.12)", border: "1px solid rgba(112,11,151,0.22)" }}
-            >
-              <span aria-hidden="true" style={{ width: 5, height: 5, borderRadius: "50%", background: "#8E05C2", display: "inline-block" }} />
-              (06) Contact
-            </span>
+            <div className="flex items-center gap-3 mb-8 w-fit">
+              <span
+                style={{
+                  width: 6,
+                  height: 6,
+                  borderRadius: "50%",
+                  background: "#8E05C2",
+                  display: "block",
+                  flexShrink: 0,
+                }}
+                aria-hidden="true"
+              />
+              <span
+                style={{
+                  fontSize: 11,
+                  fontWeight: 700,
+                  textTransform: "uppercase",
+                  letterSpacing: "0.2em",
+                  color: "#700B97",
+                }}
+              >
+                (06) Contact
+              </span>
+            </div>
           </Reveal>
 
+          {/* Heading */}
           <Reveal delay={60}>
             <h1
               id="contact-heading"
-              className="text-optical text-ink"
-              style={{ fontSize: "clamp(52px,7.5vw,110px)", fontWeight: 800, letterSpacing: "-0.045em", lineHeight: 0.89, maxWidth: 700 }}
+              className="text-ink"
+              style={{
+                fontSize: "clamp(56px, 8vw, 120px)",
+                fontWeight: 900,
+                letterSpacing: "-0.05em",
+                lineHeight: 0.88,
+                maxWidth: 740,
+              }}
             >
               Let&apos;s talk.
             </h1>
           </Reveal>
 
+          {/* Subtitle */}
           <Reveal delay={120}>
-            <p className="mt-6 text-muted" style={{ fontSize: "clamp(16px,1.8vw,19px)", lineHeight: 1.58, letterSpacing: "-0.006em", maxWidth: 480 }}>
-              We respond to every serious inquiry within 48 hours. Real conversations, not templates.
+            <p
+              style={{
+                marginTop: "clamp(20px,2.5vh,32px)",
+                fontSize: "clamp(16px, 1.6vw, 18px)",
+                lineHeight: 1.62,
+                letterSpacing: "-0.006em",
+                color: "#9080A8",
+                maxWidth: 480,
+              }}
+            >
+              We respond to every serious inquiry within 48 hours. Real
+              conversations, not templates.
             </p>
           </Reveal>
         </div>
       </section>
 
-      {/* ── Main grid ────────────────────────────────────────────────── */}
-      <section className="px-[clamp(20px,5vw,48px)] pb-[clamp(80px,12vh,160px)]">
+      {/* ── Main grid ─────────────────────────────────────────────────── */}
+      <section
+        style={{
+          paddingInline: "clamp(20px,5vw,48px)",
+          paddingBottom: "clamp(80px,12vh,140px)",
+        }}
+      >
         <div className="max-w-container mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-[5fr_7fr] gap-12 lg:gap-20">
-
-            {/* Left: trust + info */}
+          <div
+            className="grid grid-cols-1 lg:grid-cols-[5fr_7fr] gap-12 lg:gap-16"
+          >
+            {/* ── Left: info ─────────────────────────────────────── */}
             <Reveal className="flex flex-col gap-10">
+              {/* Email */}
               <div>
-                <span className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-muted mb-3">Email us directly</span>
+                <SectionLabel>Email us directly</SectionLabel>
                 <a
                   href="mailto:hello@justpublisher.com"
-                  className="font-semibold hover:opacity-80 transition-opacity duration-160 group text-gradient"
-                  style={{ fontSize: "clamp(16px,1.6vw,20px)", letterSpacing: "-0.01em", textDecoration: "underline", textUnderlineOffset: 4 }}
+                  className="group inline-flex items-center gap-1.5 hover:opacity-80 transition-opacity duration-160"
+                  style={{
+                    fontSize: "clamp(16px,1.5vw,19px)",
+                    fontWeight: 600,
+                    letterSpacing: "-0.01em",
+                    color: "#700B97",
+                    textDecoration: "underline",
+                    textUnderlineOffset: 4,
+                  }}
                 >
                   hello@justpublisher.com
-                  <span aria-hidden="true" className="inline-block ml-1.5 transition-transform duration-160 ease-spring group-hover:translate-x-1">→</span>
+                  <span
+                    aria-hidden="true"
+                    className="inline-block transition-transform duration-160 ease-spring group-hover:translate-x-1"
+                  >
+                    →
+                  </span>
                 </a>
               </div>
 
-              <div className="flex flex-col gap-4">
-                <TrustBadge icon="⏱" text="Response within 48 hours, every time" />
-                <TrustBadge icon="◎" text="Real conversations — we review every inquiry personally" />
-                <TrustBadge icon="▲" text="No commitment required to get a response" />
-                <TrustBadge icon="◆" text="Your code and users stay yours, always" />
+              {/* Trust badges */}
+              <div>
+                <SectionLabel>Why reach out</SectionLabel>
+                <div className="flex flex-col gap-4">
+                  <TrustBadge icon="⏱" text="Response within 48 hours, every time" />
+                  <TrustBadge icon="◎" text="Real conversations — we review every inquiry personally" />
+                  <TrustBadge icon="▲" text="No commitment required to get a response" />
+                  <TrustBadge icon="◆" text="Your code and users stay yours, always" />
+                </div>
               </div>
 
+              {/* What to include */}
               <div>
-                <span className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-muted mb-4">What to include</span>
+                <SectionLabel>What to include</SectionLabel>
                 <ul className="flex flex-col gap-3" role="list">
                   <CheckItem text="Your app name and what it does (one sentence)" />
                   <CheckItem text="Platform(s) — iOS, Android, or both" />
@@ -286,8 +530,9 @@ export function ContactContent() {
                 </ul>
               </div>
 
+              {/* Next steps */}
               <div>
-                <span className="block text-[11px] font-semibold uppercase tracking-[0.12em] text-muted mb-4">What happens next</span>
+                <SectionLabel>What happens next</SectionLabel>
                 <div className="flex flex-col gap-3">
                   <NextStep num="01" text="We review your inquiry and respond within 48 hours." />
                   <NextStep num="02" text="If there's potential fit, we schedule a 30 min intro call." />
@@ -297,53 +542,213 @@ export function ContactContent() {
               </div>
             </Reveal>
 
-            {/* Right: form */}
+            {/* ── Right: form card ───────────────────────────────── */}
             <Reveal delay={100}>
               <div
-                className="rounded-panel p-8 lg:p-10"
-                style={{ background: "#0A0018", border: "1px solid rgba(62,6,95,0.6)", boxShadow: "0 4px 24px rgba(62,6,95,0.3)" }}
+                className="relative rounded-panel overflow-hidden noise-overlay"
+                style={{
+                  background: "#060010",
+                  border: "1px solid rgba(142,5,194,0.2)",
+                  boxShadow:
+                    "0 0 0 1px rgba(62,6,95,0.2), 0 32px 80px rgba(62,6,95,0.4), 0 4px 24px rgba(0,0,0,0.6)",
+                  padding: "clamp(28px,4vw,44px)",
+                }}
               >
-                <div className="mb-8">
-                  <h2 className="text-ink" style={{ fontSize: "clamp(22px,2.5vw,32px)", fontWeight: 800, letterSpacing: "-0.03em", lineHeight: 1.1, marginBottom: 8 }}>
+                {/* Top glow border */}
+                <div
+                  className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                  aria-hidden="true"
+                  style={{
+                    background:
+                      "linear-gradient(to right, transparent, rgba(142,5,194,0.7) 30%, rgba(200,140,255,0.5) 50%, rgba(142,5,194,0.7) 70%, transparent)",
+                  }}
+                />
+
+                {/* Ambient glow inside card */}
+                <div
+                  className="absolute pointer-events-none"
+                  aria-hidden="true"
+                  style={{
+                    top: -80,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    width: 500,
+                    height: 260,
+                    borderRadius: "50%",
+                    background:
+                      "radial-gradient(ellipse, rgba(142,5,194,0.14) 0%, transparent 70%)",
+                    filter: "blur(32px)",
+                  }}
+                />
+
+                {/* Card header */}
+                <div className="relative mb-8">
+                  <h2
+                    className="text-ink"
+                    style={{
+                      fontSize: "clamp(22px, 2.2vw, 30px)",
+                      fontWeight: 900,
+                      letterSpacing: "-0.04em",
+                      lineHeight: 1.05,
+                      marginBottom: 10,
+                    }}
+                  >
                     Tell us about your app.
                   </h2>
-                  <p className="text-muted" style={{ fontSize: 14, lineHeight: 1.55 }}>
-                    We review every submission personally. Downloads don&apos;t matter — potential does.
+                  <p style={{ fontSize: 14, lineHeight: 1.6, color: "#9080A8" }}>
+                    We review every submission personally. Downloads don&apos;t
+                    matter — potential does.
                   </p>
                 </div>
-                <ContactForm />
+
+                {/* Form */}
+                <div className="relative">
+                  <ContactForm />
+                </div>
               </div>
             </Reveal>
           </div>
         </div>
       </section>
 
-      {/* ── Social proof bar ──────────────────────────────────────────── */}
-      <section
-        className="px-[clamp(20px,5vw,48px)] py-12 border-t"
-        style={{ background: "rgba(62,6,95,0.15)", borderColor: "rgba(62,6,95,0.4)" }}
-      >
+      {/* ── Social proof panel ───────────────────────────────────────── */}
+      <section style={{ paddingInline: "clamp(20px,5vw,48px)", paddingBottom: "clamp(80px,12vh,140px)" }}>
         <div className="max-w-container mx-auto">
           <Reveal>
-            <div className="flex flex-wrap items-center justify-center md:justify-between gap-6 text-center md:text-left">
-              {[
-                { value: "+$1M", label: "Revenue Generated" },
-                { value: "10+",  label: "Apps Published" },
-                { value: "48h",  label: "Max Response Time" },
-                { value: "100%", label: "Inquiry Response Rate" },
-              ].map((item) => (
-                <div key={item.label} className="flex flex-col items-center md:items-start gap-1">
-                  <span
-                    className="font-extrabold tabular-nums text-gradient"
-                    style={{ fontSize: "clamp(28px,3vw,42px)", letterSpacing: "-0.04em", lineHeight: 0.9 }}
+            <div
+              className="relative rounded-panel overflow-hidden"
+              style={{
+                background:
+                  "linear-gradient(160deg, #0E0020 0%, #0A0018 60%, #100025 100%)",
+                border: "1px solid rgba(142,5,194,0.18)",
+                boxShadow:
+                  "0 0 0 1px rgba(62,6,95,0.2), 0 24px 64px rgba(62,6,95,0.35)",
+              }}
+            >
+              {/* Top glow line */}
+              <div
+                className="absolute top-0 left-0 right-0 h-px pointer-events-none"
+                aria-hidden="true"
+                style={{
+                  background:
+                    "linear-gradient(to right, transparent, rgba(142,5,194,0.6) 25%, rgba(200,140,255,0.4) 50%, rgba(142,5,194,0.6) 75%, transparent)",
+                }}
+              />
+
+              {/* Ambient glow */}
+              <div
+                className="absolute pointer-events-none"
+                aria-hidden="true"
+                style={{
+                  top: -60,
+                  left: "50%",
+                  transform: "translateX(-50%)",
+                  width: 600,
+                  height: 220,
+                  borderRadius: "50%",
+                  background:
+                    "radial-gradient(ellipse, rgba(142,5,194,0.18) 0%, transparent 70%)",
+                  filter: "blur(28px)",
+                }}
+              />
+
+              {/* Dot grid */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                aria-hidden="true"
+                style={{
+                  backgroundImage:
+                    "radial-gradient(circle, rgba(240,232,255,0.06) 1px, transparent 1px)",
+                  backgroundSize: "28px 28px",
+                }}
+              />
+
+              {/* Stats */}
+              <div className="relative grid grid-cols-2 md:grid-cols-4">
+                {[
+                  { value: "+$1M", label: "Revenue Generated" },
+                  { value: "10+",  label: "Apps Published" },
+                  { value: "48h",  label: "Max Response Time" },
+                  { value: "100%", label: "Inquiry Response Rate" },
+                ].map((item, i) => (
+                  <div
+                    key={item.label}
+                    className="relative flex flex-col items-center justify-center py-10 px-6 gap-3"
                   >
-                    {item.value}
-                  </span>
-                  <span className="text-muted" style={{ fontSize: 11, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.1em" }}>
-                    {item.label}
-                  </span>
-                </div>
-              ))}
+                    {/* Dividers */}
+                    {i > 0 && (
+                      <div
+                        className="absolute left-0 top-6 bottom-6 w-px pointer-events-none hidden md:block"
+                        aria-hidden="true"
+                        style={{
+                          background:
+                            "linear-gradient(to bottom, transparent, rgba(142,5,194,0.28) 30%, rgba(142,5,194,0.28) 70%, transparent)",
+                        }}
+                      />
+                    )}
+                    {(i === 2) && (
+                      <div
+                        className="absolute top-0 left-6 right-6 h-px pointer-events-none md:hidden"
+                        aria-hidden="true"
+                        style={{
+                          background:
+                            "linear-gradient(to right, transparent, rgba(142,5,194,0.28) 30%, rgba(142,5,194,0.28) 70%, transparent)",
+                        }}
+                      />
+                    )}
+
+                    {/* Number with glow */}
+                    <div className="relative select-none">
+                      <div
+                        aria-hidden="true"
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          fontSize: "clamp(28px,3vw,44px)",
+                          fontWeight: 900,
+                          letterSpacing: "-0.05em",
+                          lineHeight: 0.9,
+                          color: "#8E05C2",
+                          filter: "blur(12px)",
+                          opacity: 0.5,
+                          userSelect: "none",
+                        }}
+                      >
+                        {item.value}
+                      </div>
+                      <span
+                        style={{
+                          position: "relative",
+                          fontSize: "clamp(28px,3vw,44px)",
+                          fontWeight: 900,
+                          letterSpacing: "-0.05em",
+                          lineHeight: 0.9,
+                          background:
+                            "linear-gradient(160deg, #C47EFF 0%, #F0E8FF 45%, #9B30D0 100%)",
+                          WebkitBackgroundClip: "text",
+                          WebkitTextFillColor: "transparent",
+                          backgroundClip: "text",
+                        }}
+                      >
+                        {item.value}
+                      </span>
+                    </div>
+
+                    <span
+                      style={{
+                        fontSize: 10,
+                        fontWeight: 700,
+                        textTransform: "uppercase",
+                        letterSpacing: "0.16em",
+                        color: "#9080A8",
+                        textAlign: "center",
+                      }}
+                    >
+                      {item.label}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           </Reveal>
         </div>

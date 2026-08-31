@@ -96,9 +96,9 @@ module.exports = {
         },
       },
       animation: {
-        marquee: "marquee-x 36s linear infinite",
-        "marquee-reverse": "marquee-x-reverse 50s linear infinite",
-        "marquee-alt": "marquee-x 42s linear infinite",
+        marquee: "marquee-x 8s linear infinite",
+        "marquee-reverse": "marquee-x-reverse 12s linear infinite",
+        "marquee-alt": "marquee-x 10s linear infinite",
         "hero-0": "hero-enter 520ms cubic-bezier(0.22,1,0.36,1) both",
         "hero-1": "hero-enter 520ms cubic-bezier(0.22,1,0.36,1) 80ms both",
         "hero-2": "hero-enter 520ms cubic-bezier(0.22,1,0.36,1) 160ms both",
