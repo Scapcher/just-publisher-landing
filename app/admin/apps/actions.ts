@@ -1,7 +1,7 @@
 "use server";
 
 import { adminSupabase } from "@/utils/supabase/admin";
-import { createClient } from "@/utils/supabase/server";
+import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -117,7 +117,7 @@ export async function deleteApp(formData: FormData) {
 }
 
 export async function signOut() {
-  const supabase = await createClient();
-  await supabase.auth.signOut();
+  const cookieStore = await cookies();
+  cookieStore.delete("jp_admin");
   redirect("/admin/login");
 }

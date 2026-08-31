@@ -26,18 +26,20 @@ export function Button({
         size === "md" && "h-[56px] px-7 text-[15px]",
         size === "lg" && "h-[60px] px-8 text-base",
         variant === "primary" &&
-          "bg-forest text-paper hover:bg-pine shadow-elev-1 hover:shadow-elev-2",
-        variant === "ghost" && "text-ink underline underline-offset-4 hover:text-forest",
+          "text-ink shadow-elev-1 hover:shadow-elev-2 hover:scale-[1.01]",
+        variant === "ghost" && "text-muted underline underline-offset-4 hover:text-ink",
         className
       )}
+      style={
+        variant === "primary"
+          ? { background: "#700B97", boxShadow: "0 0 20px rgba(112,11,151,0.3)" }
+          : undefined
+      }
       {...props}
     >
       <span>{children}</span>
       {arrow && (
-        <span
-          aria-hidden="true"
-          className="transition-transform duration-160 ease-spring group-hover:translate-x-1"
-        >
+        <span aria-hidden="true" className="transition-transform duration-160 ease-spring group-hover:translate-x-1">
           →
         </span>
       )}

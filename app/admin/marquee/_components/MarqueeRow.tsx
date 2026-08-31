@@ -24,14 +24,15 @@ export function MarqueeRow({ app }: { app: MarqueeApp }) {
 
   return (
     <div style={{
-      background: "#FFFDF4", borderRadius: 12,
-      border: "1px solid #E7E1B1", padding: "14px 16px",
+      background: "#F5F5F0", borderRadius: 6,
+      border: "1px solid #C2A68C", padding: "12px 16px",
       display: "flex", alignItems: "center", gap: 14,
+      boxShadow: "0 1px 3px rgba(44,36,24,0.05)",
     }}>
       {/* Icon preview */}
       <div style={{
-        width: 44, height: 44, borderRadius: 11, background: bg,
-        color: "#FFFDF4", display: "flex", alignItems: "center", justifyContent: "center",
+        width: 44, height: 44, borderRadius: 10, background: bg,
+        color: "#F5F5F0", display: "flex", alignItems: "center", justifyContent: "center",
         fontWeight: 700, fontSize: 16, flexShrink: 0, overflow: "hidden",
         transition: "background 150ms",
       }}>
@@ -51,7 +52,7 @@ export function MarqueeRow({ app }: { app: MarqueeApp }) {
 
         <input type="color" name="bg" defaultValue={app.bg}
           onChange={(e) => setBg(e.target.value)}
-          style={{ width: 38, height: 36, borderRadius: 6, border: "1px solid #E7E1B1",
+          style={{ width: 38, height: 36, borderRadius: 6, border: "1px solid #C2A68C",
             cursor: "pointer", padding: 2, flexShrink: 0 }} />
 
         <input name="initial" defaultValue={app.initial} required maxLength={2}
@@ -63,8 +64,8 @@ export function MarqueeRow({ app }: { app: MarqueeApp }) {
         {/* File upload */}
         <label style={{
           display: "inline-flex", alignItems: "center", gap: 6, padding: "7px 12px",
-          borderRadius: 8, background: "#F0EDD0", border: "1px solid #E7E1B1",
-          fontSize: 12, fontWeight: 500, cursor: "pointer", flexShrink: 0,
+          borderRadius: 6, background: "#E6D8C3", border: "1px solid #C2A68C",
+          fontSize: 12, fontWeight: 500, cursor: "pointer", flexShrink: 0, color: "#5C4F3D",
         }}>
           İkon
           <input type="file" name="icon" accept="image/png,image/jpeg,image/webp"
@@ -87,18 +88,18 @@ export function MarqueeRow({ app }: { app: MarqueeApp }) {
 }
 
 const inp: React.CSSProperties = {
-  padding: "8px 11px", borderRadius: 8, border: "1.5px solid #E7E1B1",
-  background: "#FFFDF4", fontSize: 14, boxSizing: "border-box",
+  padding: "8px 11px", borderRadius: 6, border: "1.5px solid #C2A68C",
+  background: "#F5F5F0", fontSize: 14, boxSizing: "border-box", color: "#2C2418",
 };
 
 const saveBtn: React.CSSProperties = {
-  padding: "8px 14px", borderRadius: 8, background: "#306D29",
-  color: "#FFFDF4", fontSize: 13, fontWeight: 600, border: "none",
+  padding: "8px 14px", borderRadius: 4, background: "#5D866C",
+  color: "#F5F5F0", fontSize: 13, fontWeight: 600, border: "none",
   cursor: "pointer", flexShrink: 0,
 };
 
 const deleteBtn: React.CSSProperties = {
-  padding: "8px 12px", borderRadius: 8, background: "transparent",
-  color: "#991B1B", fontSize: 13, border: "1px solid #FECACA",
+  padding: "8px 12px", borderRadius: 4, background: "transparent",
+  color: "#991B1B", fontSize: 13, border: "1px solid rgba(239,68,68,0.3)",
   cursor: "pointer",
 };

@@ -10,11 +10,13 @@ function Counter({
   prefix,
   suffix,
   label,
+  index,
 }: {
   target: number;
   prefix: string;
   suffix: string;
   label: string;
+  index: number;
 }) {
   const [value, setValue] = useState(0);
   const { ref, inView } = useInView();
@@ -31,24 +33,39 @@ function Counter({
       return;
     }
 
+    const delay = index * 120;
     const duration = 1400;
-    const start = performance.now();
     let raf: number;
+    let timer: ReturnType<typeof setTimeout>;
 
-    const tick = (now: number) => {
-      const elapsed = now - start;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setValue(Math.round(target * eased));
-      if (progress < 1) raf = requestAnimationFrame(tick);
+    timer = setTimeout(() => {
+      const start = performance.now();
+      const tick = (now: number) => {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        setValue(Math.round(target * eased));
+        if (progress < 1) raf = requestAnimationFrame(tick);
+      };
+      raf = requestAnimationFrame(tick);
+    }, delay);
+
+    return () => {
+      clearTimeout(timer);
+      cancelAnimationFrame(raf);
     };
-
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [inView, target]);
+  }, [inView, target, index]);
 
   return (
-    <div ref={ref} className="flex flex-col items-center md:items-start gap-2">
+    <div
+      ref={ref}
+      className="flex flex-col items-center md:items-start gap-2"
+      style={{
+        opacity: inView ? 1 : 0,
+        transform: inView ? "translateY(0)" : "translateY(24px)",
+        transition: `opacity 640ms ${index * 120}ms cubic-bezier(0.22,1,0.36,1), transform 640ms ${index * 120}ms cubic-bezier(0.22,1,0.36,1)`,
+      }}
+    >
       <div
         className="font-extrabold text-forest tabular-nums"
         style={{
@@ -70,6 +87,7 @@ function Counter({
 
 export function TrackRecord() {
   const { trackRecord } = content;
+  const { ref: headRef, inView: headInView } = useInView({ threshold: 0.2 });
 
   return (
     <section
@@ -78,9 +96,20 @@ export function TrackRecord() {
       aria-labelledby="track-record-heading"
     >
       <div className="max-w-container mx-auto">
-        <Eyebrow label={trackRecord.eyebrow} />
+        <div
+          ref={headRef}
+          style={{
+            opacity: headInView ? 1 : 0,
+            transform: headInView ? "translateY(0)" : "translateY(20px)",
+            transition:
+              "opacity 520ms cubic-bezier(0.22,1,0.36,1), transform 520ms cubic-bezier(0.22,1,0.36,1)",
+          }}
+        >
+          <Eyebrow label={trackRecord.eyebrow} />
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-0 md:divide-x md:divide-sand">
-          {trackRecord.metrics.map((metric) => (
+          {trackRecord.metrics.map((metric, i) => (
             <div
               key={metric.label}
               className="md:px-12 first:pl-0 last:pr-0"
@@ -90,6 +119,7 @@ export function TrackRecord() {
                 prefix={metric.prefix}
                 suffix={metric.suffix}
                 label={metric.label}
+                index={i}
               />
             </div>
           ))}

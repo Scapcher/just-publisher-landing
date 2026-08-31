@@ -31,9 +31,9 @@ function PhoneMockup({
         width,
         height,
         borderRadius: 28 * scale,
-        border: "1.5px solid rgba(26,26,18,0.08)",
-        background: "#FFFDF4",
-        boxShadow: "0 2px 4px rgba(26,26,18,0.04), 0 16px 40px rgba(26,26,18,0.09)",
+        border: "1px solid rgba(62,6,95,0.35)",
+        background: "#0A0018",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.6), 0 16px 40px rgba(62,6,95,0.3)",
         overflow: "hidden",
         flexShrink: 0,
         ...style,
@@ -42,7 +42,7 @@ function PhoneMockup({
       <div
         style={{
           height: 10 * scale,
-          background: "#E7E1B1",
+          background: "#1E0038",
           margin: `${16 * scale}px ${18 * scale}px 0`,
           borderRadius: 3,
         }}
@@ -52,12 +52,13 @@ function PhoneMockup({
           style={{
             height: 6 * scale,
             width: "52%",
-            background: "#1A1A12",
+            background: "#F0E8FF",
             borderRadius: 3,
             marginBottom: 6 * scale,
+            opacity: 0.7,
           }}
         />
-        <div style={{ height: 4 * scale, width: "28%", background: "#6B6A55", borderRadius: 2 }} />
+        <div style={{ height: 4 * scale, width: "28%", background: "#9080A8", borderRadius: 2 }} />
       </div>
       <div
         style={{
@@ -109,7 +110,7 @@ function PhoneMockup({
               width: 24 * scale,
               height: 24 * scale,
               borderRadius: 8 * scale,
-              background: "#E7E1B1",
+              background: "#1E0038",
               flexShrink: 0,
             }}
           />
@@ -117,16 +118,17 @@ function PhoneMockup({
             <div
               style={{
                 height: 4 * scale,
-                background: "#1A1A12",
+                background: "#F0E8FF",
                 borderRadius: 2,
                 marginBottom: 4 * scale,
                 width: `${w}%`,
+                opacity: 0.65,
               }}
             />
             <div
               style={{
                 height: 3 * scale,
-                background: "#6B6A55",
+                background: "#9080A8",
                 borderRadius: 2,
                 width: `${Math.max(w - 22, 10)}%`,
               }}
@@ -158,9 +160,9 @@ function PhoneFrame({
         width,
         height,
         borderRadius: 28 * scale,
-        border: "1.5px solid rgba(26,26,18,0.10)",
+        border: "1px solid rgba(62,6,95,0.3)",
         background: accent,
-        boxShadow: "0 2px 4px rgba(26,26,18,0.04), 0 16px 40px rgba(26,26,18,0.12)",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.5), 0 16px 40px rgba(62,6,95,0.3)",
         overflow: "hidden",
         flexShrink: 0,
         position: "relative",
@@ -203,7 +205,7 @@ function StatCell({
           style={{
             fontSize: 13,
             fontWeight: 600,
-            color: "#6B6A55",
+            color: "#9080A8",
             textTransform: "uppercase",
             letterSpacing: "0.09em",
             marginBottom: 8,
@@ -221,7 +223,7 @@ function StatCell({
 function StatDivider() {
   return (
     <div
-      style={{ width: 1, background: "#E7E1B1", alignSelf: "stretch", margin: "0 16px" }}
+      style={{ width: 1, background: "#1E0038", alignSelf: "stretch", margin: "0 16px" }}
       aria-hidden="true"
     />
   );
@@ -277,14 +279,14 @@ function AppPanel({ app, index }: { app: AppItem; index: number }) {
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          color: "#FFFDF4",
-          fontSize: 34,
+          color: "#F0E8FF",
+          fontSize: 32,
           fontWeight: 700,
           letterSpacing: "-0.02em",
           flexShrink: 0,
           overflow: "hidden",
           boxShadow:
-            "0 1px 2px rgba(26,26,18,0.06), 0 6px 16px rgba(26,26,18,0.10), inset 0 1px 0 rgba(255,255,255,0.2)",
+            "0 1px 3px rgba(0,0,0,0.5), 0 6px 20px rgba(62,6,95,0.35), inset 0 1px 0 rgba(142,5,194,0.12)",
         }}
       >
         {app.iconUrl ? (
@@ -361,7 +363,7 @@ function AppPanel({ app, index }: { app: AppItem; index: number }) {
                   fontSize: 22,
                   fontWeight: 700,
                   letterSpacing: "-0.02em",
-                  color: "#1A1A12",
+                  color: "#F0E8FF",
                   fontVariantNumeric: "tabular-nums",
                 }}
               >
@@ -383,7 +385,7 @@ function AppPanel({ app, index }: { app: AppItem; index: number }) {
                   fontSize: 22,
                   fontWeight: 700,
                   letterSpacing: "-0.02em",
-                  color: "#1A1A12",
+                  color: "#F0E8FF",
                   fontVariantNumeric: "tabular-nums",
                 }}
               >
@@ -403,7 +405,7 @@ function AppPanel({ app, index }: { app: AppItem; index: number }) {
                 fontSize: 22,
                 fontWeight: 700,
                 letterSpacing: "-0.02em",
-                color: "#1A1A12",
+                color: "#F0E8FF",
               }}
             >
               {app.ageRating}
@@ -421,7 +423,7 @@ function AppPanel({ app, index }: { app: AppItem; index: number }) {
                 fontSize: 22,
                 fontWeight: 700,
                 letterSpacing: "-0.02em",
-                color: "#1A1A12",
+                color: "#F0E8FF",
                 fontVariantNumeric: "tabular-nums",
               }}
             >
@@ -605,10 +607,10 @@ function AppPanel({ app, index }: { app: AppItem; index: number }) {
         className="relative bg-paper overflow-hidden"
         style={{
           borderRadius: 36,
-          border: "1px solid rgba(231,225,177,0.6)",
+          border: hovered ? "1px solid rgba(112,11,151,0.35)" : "1px solid rgba(62,6,95,0.4)",
           boxShadow: hovered
-            ? "0 4px 8px rgba(26,26,18,0.05), 0 24px 48px rgba(26,26,18,0.10), inset 0 1px 0 rgba(255,255,255,0.6)"
-            : "0 2px 4px rgba(26,26,18,0.04), 0 12px 28px rgba(26,26,18,0.07), inset 0 1px 0 rgba(255,255,255,0.6)",
+            ? "0 4px 12px rgba(0,0,0,0.7), 0 24px 56px rgba(62,6,95,0.55), inset 0 1px 0 rgba(142,5,194,0.12)"
+            : "0 2px 6px rgba(0,0,0,0.5), 0 12px 32px rgba(62,6,95,0.3), inset 0 1px 0 rgba(142,5,194,0.07)",
           transform: hovered ? "translateY(-6px)" : "translateY(0)",
           transition:
             "box-shadow 280ms cubic-bezier(0.22,1,0.36,1), transform 280ms cubic-bezier(0.22,1,0.36,1)",

@@ -40,7 +40,7 @@ export function AppForm({ action, defaultValues: d = {}, isEdit }: Props) {
 
       {/* Medya upload — ikon + 2 screenshot yan yana */}
       <div>
-        <span style={{ fontSize: 13, fontWeight: 600, color: "#1A1A12", display: "block", marginBottom: 12 }}>
+        <span style={{ fontSize: 13, fontWeight: 600, color: "#2C2418", display: "block", marginBottom: 12 }}>
           Görseller
         </span>
         <div style={{ display: "flex", gap: 16, flexWrap: "wrap" }}>
@@ -73,7 +73,7 @@ export function AppForm({ action, defaultValues: d = {}, isEdit }: Props) {
         </div>
       </div>
 
-      <hr style={{ border: "none", borderTop: "1px solid #E7E1B1" }} />
+      <hr style={{ border: "none", borderTop: "1px solid #C2A68C" }} />
 
       <Row>
         <Field label="Slug" name="slug" defaultValue={d.slug} required placeholder="trackd" readOnly={isEdit} />
@@ -126,15 +126,15 @@ function Field({
   min?: string; max?: string; maxLength?: number;
 }) {
   const style: React.CSSProperties = {
-    padding: "10px 14px", borderRadius: 8,
-    border: "1.5px solid #E7E1B1",
-    background: readOnly ? "#F5F0E0" : "#FFFDF4",
+    padding: "10px 14px", borderRadius: 6,
+    border: "1.5px solid #C2A68C",
+    background: readOnly ? "#E6D8C3" : "#F5F5F0",
     fontSize: 14, width: "100%", boxSizing: "border-box",
-    color: readOnly ? "#6B6A55" : "#1A1A12",
+    color: readOnly ? "#8A7A6A" : "#2C2418",
   };
   return (
     <label style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
-      <span style={{ fontSize: 13, fontWeight: 600, color: "#1A1A12" }}>{label}</span>
+      <span style={{ fontSize: 13, fontWeight: 600, color: "#2C2418" }}>{label}</span>
       {multiline ? (
         <textarea name={name} defaultValue={defaultValue as string} required={required}
           placeholder={placeholder} rows={4} style={{ ...style, resize: "vertical" }} />
@@ -152,11 +152,11 @@ function ColorField({ label, name, defaultValue, onChange }: {
 }) {
   return (
     <label style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-      <span style={{ fontSize: 13, fontWeight: 600, color: "#1A1A12" }}>{label}</span>
+      <span style={{ fontSize: 13, fontWeight: 600, color: "#2C2418" }}>{label}</span>
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
         <input type="color" name={name} defaultValue={defaultValue}
           onChange={(e) => onChange?.(e.target.value)}
-          style={{ width: 44, height: 44, borderRadius: 8, border: "1.5px solid #E7E1B1", cursor: "pointer", padding: 2 }} />
+          style={{ width: 44, height: 44, borderRadius: 6, border: "1.5px solid #C2A68C", cursor: "pointer", padding: 2 }} />
       </div>
     </label>
   );
@@ -177,43 +177,41 @@ function UploadSlot({
   const isIcon   = shape === "icon";
   const w        = isIcon ? 80  : 72;
   const h        = isIcon ? 80  : 128;
-  const radius   = isIcon ? 20  : 12;
+  const radius   = isIcon ? 14  : 8;
 
   return (
     <label style={{ display: "flex", flexDirection: "column", gap: 8, cursor: "pointer" }}>
-      <span style={{ fontSize: 12, fontWeight: 600, color: "#1A1A12" }}>{label}</span>
+      <span style={{ fontSize: 12, fontWeight: 600, color: "#2C2418" }}>{label}</span>
 
-      {/* Preview box */}
       <div style={{
         width: w, height: h, borderRadius: radius,
-        background: preview ? "transparent" : (isIcon ? (bg ?? "#6B6A55") : "#E7E1B1"),
-        border: "1.5px solid #E7E1B1",
+        background: preview ? "transparent" : (isIcon ? (bg ?? "#C2A68C") : "#E6D8C3"),
+        border: "1.5px solid #C2A68C",
         display: "flex", alignItems: "center", justifyContent: "center",
         overflow: "hidden", flexShrink: 0, position: "relative",
-        boxShadow: "0 2px 8px rgba(26,26,18,0.08)",
+        boxShadow: "0 2px 6px rgba(44,36,24,0.08)",
       }}>
         {preview ? (
           <Image src={preview} alt={label} width={w} height={h}
             style={{ objectFit: "cover", width: "100%", height: "100%" }} unoptimized />
         ) : isIcon ? (
-          <span style={{ color: "#FFFDF4", fontWeight: 700, fontSize: 28 }}>{initial ?? "?"}</span>
+          <span style={{ color: "#F5F5F0", fontWeight: 700, fontSize: 28 }}>{initial ?? "?"}</span>
         ) : (
-          <span style={{ color: "#6B6A55", fontSize: 11, textAlign: "center", padding: "0 8px" }}>Görsel yok</span>
+          <span style={{ color: "#C2A68C", fontSize: 11, textAlign: "center", padding: "0 8px" }}>Görsel yok</span>
         )}
-        {/* Overlay hover hint */}
         <div style={{
-          position: "absolute", inset: 0, background: "rgba(0,0,0,0.35)",
+          position: "absolute", inset: 0, background: "rgba(44,36,24,0.25)",
           display: "flex", alignItems: "center", justifyContent: "center",
           opacity: 0, transition: "opacity 150ms",
         }}
           onMouseEnter={(e) => (e.currentTarget.style.opacity = "1")}
           onMouseLeave={(e) => (e.currentTarget.style.opacity = "0")}
         >
-          <span style={{ color: "#fff", fontSize: 11, fontWeight: 600 }}>Değiştir</span>
+          <span style={{ color: "#F5F5F0", fontSize: 11, fontWeight: 600 }}>Değiştir</span>
         </div>
       </div>
 
-      {hint && <span style={{ fontSize: 11, color: "#6B6A55" }}>{hint}</span>}
+      {hint && <span style={{ fontSize: 11, color: "#8A7A6A" }}>{hint}</span>}
 
       <input
         type="file" name={name}
@@ -229,11 +227,11 @@ function UploadSlot({
 }
 
 const submitBtn: React.CSSProperties = {
-  padding: "12px 28px", borderRadius: 10, background: "#306D29",
-  color: "#FFFDF4", fontWeight: 600, fontSize: 15, border: "none", cursor: "pointer",
+  padding: "12px 28px", borderRadius: 6, background: "#5D866C",
+  color: "#F5F5F0", fontWeight: 600, fontSize: 15, border: "none", cursor: "pointer",
 };
 const cancelBtn: React.CSSProperties = {
-  padding: "12px 28px", borderRadius: 10, background: "#F0EDD0",
-  color: "#1A1A12", fontWeight: 500, fontSize: 15, textDecoration: "none",
-  border: "1px solid #E7E1B1", display: "inline-flex", alignItems: "center",
+  padding: "12px 28px", borderRadius: 6, background: "#E6D8C3",
+  color: "#5C4F3D", fontWeight: 500, fontSize: 15, textDecoration: "none",
+  border: "1px solid #C2A68C", display: "inline-flex", alignItems: "center",
 };

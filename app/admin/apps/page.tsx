@@ -16,8 +16,8 @@ export default async function AppsPage() {
     <div>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32 }}>
         <div>
-          <h1 style={{ fontSize: 26, fontWeight: 700, letterSpacing: "-0.025em" }}>Portfolio Apps</h1>
-          <p style={{ color: "#6B6A55", fontSize: 14, marginTop: 4 }}>
+          <h1 style={{ fontSize: 26, fontWeight: 700, letterSpacing: "-0.025em", color: "#2C2418" }}>Portfolio Apps</h1>
+          <p style={{ color: "#8A7A6A", fontSize: 14, marginTop: 4 }}>
             {apps?.length ?? 0} uygulama
           </p>
         </div>
@@ -26,25 +26,26 @@ export default async function AppsPage() {
         </Link>
       </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+      <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         {apps?.map((app: any) => (
           <div
             key={app.slug}
             style={{
-              background: "#FFFDF4",
-              borderRadius: 14,
-              border: "1px solid #E7E1B1",
-              padding: "18px 20px",
+              background: "#F5F5F0",
+              borderRadius: 8,
+              border: "1px solid #C2A68C",
+              padding: "16px 20px",
               display: "flex",
               alignItems: "center",
               gap: 16,
+              boxShadow: "0 1px 4px rgba(44,36,24,0.06)",
             }}
           >
             {/* Icon */}
             <div
               style={{
-                width: 44, height: 44, borderRadius: 12,
-                background: app.bg, color: "#FFFDF4",
+                width: 44, height: 44, borderRadius: 10,
+                background: app.bg, color: "#F5F5F0",
                 display: "flex", alignItems: "center", justifyContent: "center",
                 fontWeight: 700, fontSize: 16, flexShrink: 0, overflow: "hidden",
               }}
@@ -57,8 +58,8 @@ export default async function AppsPage() {
 
             {/* Info */}
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontWeight: 600, fontSize: 15 }}>{app.name}</div>
-              <div style={{ color: "#6B6A55", fontSize: 13, marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              <div style={{ fontWeight: 600, fontSize: 15, color: "#2C2418" }}>{app.name}</div>
+              <div style={{ color: "#8A7A6A", fontSize: 13, marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                 {app.subtitle}
               </div>
             </div>
@@ -67,7 +68,7 @@ export default async function AppsPage() {
             <div style={{ display: "flex", gap: 20, flexShrink: 0 }}>
               <span style={statStyle}>★ {app.app_store_rating}</span>
               <span style={statStyle}>★ {app.play_store_rating}</span>
-              <span style={{ ...statStyle, color: "#6B6A55" }}>#{app.sort_order}</span>
+              <span style={{ ...statStyle, color: "#C2A68C" }}>#{app.sort_order}</span>
             </div>
 
             {/* Actions */}
@@ -91,10 +92,10 @@ export default async function AppsPage() {
 }
 
 const btnStyle: React.CSSProperties = {
-  background: "#306D29",
-  color: "#FFFDF4",
+  background: "#5D866C",
+  color: "#F5F5F0",
   padding: "10px 20px",
-  borderRadius: 10,
+  borderRadius: 6,
   fontWeight: 600,
   fontSize: 14,
   textDecoration: "none",
@@ -104,27 +105,27 @@ const btnStyle: React.CSSProperties = {
 const statStyle: React.CSSProperties = {
   fontSize: 13,
   fontWeight: 600,
-  color: "#1A1A12",
+  color: "#5D866C",
 };
 
 const editBtnStyle: React.CSSProperties = {
   padding: "7px 14px",
-  borderRadius: 8,
-  background: "#F0EDD0",
-  color: "#1A1A12",
+  borderRadius: 4,
+  background: "rgba(93,134,108,0.10)",
+  color: "#3D6B52",
   fontSize: 13,
   fontWeight: 500,
   textDecoration: "none",
-  border: "1px solid #E7E1B1",
+  border: "1px solid rgba(93,134,108,0.3)",
 };
 
 const deleteBtnStyle: React.CSSProperties = {
   padding: "7px 14px",
-  borderRadius: 8,
+  borderRadius: 4,
   background: "transparent",
   color: "#991B1B",
   fontSize: 13,
   fontWeight: 500,
-  border: "1px solid #FECACA",
+  border: "1px solid rgba(239,68,68,0.25)",
   cursor: "pointer",
 };

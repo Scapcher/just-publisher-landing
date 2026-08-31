@@ -140,12 +140,12 @@ export const content = {
       {
         question: "How long does the process take?",
         answer:
-          "Usually 4–6 weeks from first call to signed agreement. We move at whatever speed you're comfortable with. Rushed decisions make bad partners.",
+          "Usually 4 to 6 weeks from first call to signed agreement. We move at whatever speed you're comfortable with. Rushed decisions make bad partners.",
       },
       {
         question: "What happens after we sign?",
         answer:
-          "We run a 30-day audit — product, ASO, analytics. Then we ship a growth plan. You keep shipping features. We handle everything above the code.",
+          "We run a 30 day audit. Product, ASO, analytics. Then we ship a growth plan. You keep shipping features. We handle everything above the code.",
       },
     ],
   },
