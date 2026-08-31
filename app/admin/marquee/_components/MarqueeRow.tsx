@@ -44,7 +44,8 @@ export function MarqueeRow({ app }: { app: MarqueeApp }) {
 
       {/* Update form */}
       <form action={updateMarqueeApp} encType="multipart/form-data"
-        style={{ display: "flex", alignItems: "center", gap: 12, flex: 1, flexWrap: "wrap" }}>
+        className="flex flex-wrap items-center gap-2 flex-1"
+        style={{ minWidth: 0 }}>
         <input type="hidden" name="id" value={app.id} />
 
         <input name="name" defaultValue={app.name} required

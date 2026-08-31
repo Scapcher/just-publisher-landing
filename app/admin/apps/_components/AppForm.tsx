@@ -113,7 +113,7 @@ export function AppForm({ action, defaultValues: d = {}, isEdit }: Props) {
 }
 
 function Row({ children }: { children: React.ReactNode }) {
-  return <div style={{ display: "flex", gap: 16 }}>{children}</div>;
+  return <div className="flex flex-col sm:flex-row gap-4">{children}</div>;
 }
 
 function Field({
