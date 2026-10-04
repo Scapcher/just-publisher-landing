@@ -168,14 +168,19 @@ export default function AuraKVKKPage() {
 
       <LegalSection title="8. Başvuru Yolu">
         <p>
-          Yukarıdaki haklarınızı kullanmak için{" "}
-          <a href="mailto:support@auraglowup.app" className="text-forest underline">
-            support@auraglowup.app
-          </a>{" "}
-          adresine yazılı olarak başvurabilirsiniz. Başvurular KVKK&apos;nın 13. maddesi
-          uyarınca en geç <span className="font-semibold text-ink">30 gün</span> içinde
-          yanıtlanacaktır.
+          Yukarıdaki haklarınızı kullanmak için aşağıdaki adrese yazılı olarak başvurabilirsiniz.
+          Başvurular KVKK&apos;nın 13. maddesi uyarınca en geç{" "}
+          <span className="font-semibold text-ink">30 gün</span> içinde yanıtlanacaktır.
         </p>
+        <div className="flex flex-col gap-1 mt-3">
+          <p className="font-semibold text-ink">ARD Group LLC</p>
+          <p>FSM Mah. Poligon Cad. Buyaka Kule 3, 8C/1 Ümraniye, İstanbul, Türkiye</p>
+          <p>
+            <a href="mailto:support@auraglowup.app" className="text-forest underline">
+              support@auraglowup.app
+            </a>
+          </p>
+        </div>
       </LegalSection>
     </LegalLayout>
   );
