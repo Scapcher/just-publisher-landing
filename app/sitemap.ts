@@ -13,5 +13,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/terms`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${base}/cookies`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
     { url: `${base}/kvkk`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${base}/gamescroll/privacy`, lastModified: now, changeFrequency: "yearly", priority: 0.3 },
   ];
 }
